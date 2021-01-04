@@ -4,4 +4,4 @@ There is one example for okular which uses xdotool to generate mouse and keyboar
 
 *Note: The script might be sensitive to the local environment in terms of local configuration or exact versions of the used software. Use it with care.*
 
-Other ways to automate test runs are possible as well. See the [description of the measurement setup](../measurement-setup.md) for more details.
+Other ways to automate test runs are possible as well. See the [description of the measurement setup](../measurement_setup.md) for more details.
