@@ -25,6 +25,7 @@ This repository contains the following resources:
 * [Usage scenarios](usage_scenarios) - Detailed Descriptions of usage scenarios for specific application types. These are the scenarios for which energy consumption will be measured.
 * [Measurement setup](measurement_setup.md) - Description of hardware and software setup for performing energy measurements. This defines comparable environments and tools how to do automated measurements.
 * [Test runs](test_runs) - Automation for doing test runs of specific applications for their corresponding usage scenarios.
+* [Measurements](measurements) - Results from measurements.
 
 ## License
 
