@@ -27,6 +27,12 @@ This repository contains the following resources:
 * [Test runs](test_runs) - Automation for doing test runs of specific applications for their corresponding usage scenarios.
 * [Measurements](measurements) - Results from measurements.
 
+## Contributions
+
+This is a community project. Contributions are very welcome. This can be full measurements, but also contributions to the automation setup, usage scenarios, measurement scripts, whatever is helpful to gather data on energy consumption. Don't hesitate to [open issues](https://invent.kde.org/cschumac/feep/-/issues/new) or [merge requests](https://invent.kde.org/cschumac/feep/-/merge_requests/new).
+
+This repository is maintained by Cornelius Schumacher <schumacher@kde.org>. If you have any questions or comments please reach out.
+
 ## License
 
 The content of this repository is licensed under the [MIT license](https://opensource.org/licenses/MIT) unless otherwise noted. See the file [LICENSE.txt](LICENSE.txt) for the full text of the license.
