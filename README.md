@@ -27,6 +27,8 @@ This repository contains the following resources:
 * [Test runs](test_runs) - Automation for doing test runs of specific applications for their corresponding usage scenarios.
 * [Measurements](measurements) - Results from measurements.
 
+For all discsussions around the topic and the work we are doing here we have the mailing list [energy-efficiency@kde.org](https://mail.kde.org/cgi-bin/mailman/listinfo/energy-efficiency). Please post and subscribe there to get involved with the project.
+
 ## Contributions
 
 This is a community project. Contributions are very welcome. This can be full measurements, but also contributions to the automation setup, usage scenarios, measurement scripts, whatever is helpful to gather data on energy consumption. Don't hesitate to [open issues](https://invent.kde.org/cschumac/feep/-/issues/new) or [merge requests](https://invent.kde.org/cschumac/feep/-/merge_requests/new).
