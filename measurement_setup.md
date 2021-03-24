@@ -25,6 +25,11 @@ There are some candidates for tools which might meet the requirements:
 
 There might be more. We need to assess them and come up with a working solution.
 
+Most of these tools use X11-specific features and thus do not work on Wayland systems. There are a few possible approaches here:
+* [The XDG RemoteDesktop portal](https://docs.flatpak.org/en/latest/portal-api-reference.html#gdbus-org.freedesktop.portal.RemoteDesktop)
+* Various Wayland protocols (https://github.com/swaywm/wlr-protocols/blob/master/unstable/wlr-virtual-pointer-unstable-v1.xml, https://api.kde.org/frameworks/kwayland/html/classKWayland_1_1Client_1_1FakeInput.html). Support varies between compositors.
+* [libinput user devices](https://lwn.net/Articles/801767/)
+
 ## Measurement of system performance indicators
 
 During the energy measurement we also need to record a set of performance indicators: processor utilisation, RAM utilisation, hard disk activity and network traffic).
