@@ -10,7 +10,7 @@ Let's make energy efficient software part of our story so we can live up to our 
 
 ## Strategy
 
-As a first step we will collect energy consumption measurements of FOSS applications. Our first approach is using the [criteria for the Blue Angel environmental label](https://produktinfo.blauer-engel.de/uploads/criteriafile/en/DE-UZ%20215-eng%20Criteria.pdf) based on the [research by the Environmental Campus  Birkenfeld](https://www.umwelt-campus.de/en/research/projekte/green-software-engineering/projects/ufoplan-ssd-2015).
+As a first step we will collect energy consumption measurements of FOSS applications. Our first approach is using the [criteria for the Blue Angel environmental label](https://produktinfo.blauer-engel.de/uploads/criteriafile/en/DE-UZ%20215-202001-en-Criteria-2020-02-13.pdf) based on the [research by the Environmental Campus  Birkenfeld](https://www.umwelt-campus.de/en/research/projekte/green-software-engineering/projects/ufoplan-ssd-2015).
 
 Later we intend to integrate measuring energy consumption into the development process of applications so that energy efficiency can become a quality metric for these applications.
 
