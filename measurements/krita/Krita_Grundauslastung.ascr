@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scriptfile>
+    <settings program="actiona" version="3.10.1" scriptVersion="1.1.0" os="GNU/Linux"/>
+    <actions>
+        <action name="ActionLoop" version="1.0.0"/>
+        <action name="ActionEndProcedure" version="1.0.0"/>
+        <action name="ActionPause" version="1.0.0"/>
+        <action name="ActionStop" version="1.0.0"/>
+        <action name="ActionCode" version="1.0.0"/>
+        <action name="ActionVariable" version="1.0.0"/>
+        <action name="ActionBeginProcedure" version="1.0.0"/>
+        <action name="ActionWriteTextFile" version="1.0.0"/>
+        <action name="ActionCallProcedure" version="1.0.0"/>
+    </actions>
+    <parameters/>
+    <resources/>
+    <script pauseBefore="0" pauseAfter="0">
+        <action name="ActionVariable" comment="runtime">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <exception id="32" action="0" line=""/>
+            <parameter name="colorValue">
+                <subParameter name="value" code="0"></subParameter>
+            </parameter>
+            <parameter name="positionValue">
+                <subParameter name="unit" code="0">0</subParameter>
+                <subParameter name="value" code="0"></subParameter>
+            </parameter>
+            <parameter name="type">
+                <subParameter name="value" code="0">integer</subParameter>
+            </parameter>
+            <parameter name="value">
+                <subParameter name="value" code="0">0</subParameter>
+            </parameter>
+            <parameter name="variable">
+                <subParameter name="value" code="0">runtime</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionCallProcedure">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <parameter name="name">
+                <subParameter name="value" code="0">ha</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionBeginProcedure">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <parameter name="name">
+                <subParameter name="value" code="0">ha</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionCode" comment="Zeitstempel+startTestrun">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <parameter name="code">
+                <subParameter name="value" code="1">var zeit = new Date();
+var text = zeit.getFullYear() + &quot;-&quot; + (zeit.getMonth()+1) + &quot;-&quot; + ((zeit.getDate()&lt;10?&quot;0&quot;:'')+ zeit.getDate()) + &quot; &quot; + ((zeit.getHours()&lt;10?&quot;0&quot;:'')+ zeit.getHours()) + &quot;:&quot; + ((zeit.getMinutes()&lt;10?'0':'')+ zeit.getMinutes())+ &quot;:&quot; + ((zeit.getSeconds()&lt;10?&quot;0&quot;:'')+ zeit.getSeconds()) + &quot;.&quot; +zeit.getMilliseconds() + &quot;;startTestrun\n&quot;;</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionWriteTextFile" pauseBefore="100">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <exception id="32" action="0" line=""/>
+            <parameter name="file">
+                <subParameter name="value" code="0">/home/messrechner/Dokumente/Krita_Grundauslastung_Actions.csv</subParameter>
+            </parameter>
+            <parameter name="mode">
+                <subParameter name="value" code="0">append</subParameter>
+            </parameter>
+            <parameter name="text">
+                <subParameter name="value" code="0">$text</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionPause">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <parameter name="duration">
+                <subParameter name="value" code="0">502</subParameter>
+            </parameter>
+            <parameter name="unit">
+                <subParameter name="value" code="0">seconds</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionCode" comment="runtime++">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <parameter name="code">
+                <subParameter name="value" code="1">runtime++;</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionCode" comment="Zeitstempel+stopTestrun">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <parameter name="code">
+                <subParameter name="value" code="1">var zeit = new Date();
+var text = zeit.getFullYear() + &quot;-&quot; + (zeit.getMonth()+1) + &quot;-&quot; + ((zeit.getDate()&lt;10?&quot;0&quot;:'')+ zeit.getDate())+ &quot; &quot; + ((zeit.getHours()&lt;10?&quot;0&quot;:'')+ zeit.getHours()) + &quot;:&quot; + ((zeit.getMinutes()&lt;10?'0':'')+ zeit.getMinutes())+ &quot;:&quot; + ((zeit.getSeconds()&lt;10?&quot;0&quot;:'')+ zeit.getSeconds()) + &quot;.&quot; +zeit.getMilliseconds() + &quot;;stopTestrun\n&quot;;</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionWriteTextFile" pauseBefore="100">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <exception id="32" action="0" line=""/>
+            <parameter name="file">
+                <subParameter name="value" code="0">/home/messrechner/Dokumente/Krita_Grundauslastung_Actions.csv</subParameter>
+            </parameter>
+            <parameter name="mode">
+                <subParameter name="value" code="0">append</subParameter>
+            </parameter>
+            <parameter name="text">
+                <subParameter name="value" code="0">$text</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionLoop" pauseBefore="3000">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+            <parameter name="count">
+                <subParameter name="value" code="0">9</subParameter>
+            </parameter>
+            <parameter name="line">
+                <subParameter name="value" code="0">001</subParameter>
+            </parameter>
+        </action>
+        <action name="ActionEndProcedure">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+        </action>
+        <action name="ActionStop">
+            <exception id="0" action="0" line=""/>
+            <exception id="1" action="0" line=""/>
+            <exception id="2" action="1" line=""/>
+        </action>
+    </script>
+</scriptfile>
