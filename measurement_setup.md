@@ -45,3 +45,8 @@ Tool candidates:
 The measurement process is defined in Appendix A of the [Basic Award Criteria](https://produktinfo.blauer-engel.de/uploads/criteriafile/en/DE-UZ%20215-202001-en-Criteria-2020-02-13.pdf). It requires to record energy data and performance indicators with a granularity of 1 second and log it so it can be processed and average values can be calculated.
 
 We might want to look into tools such as [Prometheus](https://prometheus.io/) to gather the data.
+
+## Measurement reports
+
+There is a tool available from Umwelt-Campus Birkenfeld, which generates reports from measurement data, called OSCAR (Open
+Source Software Consumption Analysis): [Running instance](https://oscar.umwelt-campus.de/), [Source Code](https://gitlab.umwelt-campus.de/y.becker/oscar-public).
