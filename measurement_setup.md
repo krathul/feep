@@ -10,6 +10,8 @@ One of the remmonded devices is the [GUDE Expert Power Control 1202](https://www
 
 There is a script available to read data from the device vis SNMP: https://gitlab.umwelt-campus.de/root/mobiles_messgeraet.
 
+As an alternative it might be possible to [repurpose cheap switchable power plugs as measurement devices](https://volkerkrause.eu/2020/10/17/kde-cheap-power-measurement-tools.html)
+
 ## Reference system
 
 One of the recommended reference systems is the Fujitsu Esprimo P920 Desktop-PC proGreen selection (Intel Core i5-4570 3,6GHz, 4GB RAM, 500GB HDD). Ubuntu 18.04. runs fine on it and can be used for measurements.
