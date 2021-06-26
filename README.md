@@ -27,7 +27,11 @@ This repository contains the following resources:
 * [Test runs](test_runs) - Automation for doing test runs of specific applications for their corresponding usage scenarios.
 * [Measurements](measurements) - Results from measurements.
 
-For all discsussions around the topic and the work we are doing here we have the mailing list [energy-efficiency@kde.org](https://mail.kde.org/cgi-bin/mailman/listinfo/energy-efficiency). Please post and subscribe there to get involved with the project.
+## Communication
+
+For discsussions around the topic and the work we are doing here we have the mailing list [energy-efficiency@kde.org](https://mail.kde.org/cgi-bin/mailman/listinfo/energy-efficiency). Feel free to post and subscribe there to get involved with the project.
+
+We also have a Matrix channel [KDE Energy Efficiency](https://webchat.kde.org/#/room/#energy-efficiency:kde.org) for more direct ad-hoc discussions. Feel free to join there as well and have a chat about the topic.
 
 ## Contributions
 
