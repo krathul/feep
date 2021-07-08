@@ -1,4 +1,4 @@
-This directory contains script to automatically go through usage scenarios.
+This directory contains a script to automatically go through usage scenarios.
 
 There is one example for okular which uses xdotool to generate mouse and keyboard actions. There is a python script `okular.py` which writes a shell script `okular.sh`. The shell script can then be executed to run okular through the usage scenario for pdf readers.
 

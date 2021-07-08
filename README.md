@@ -4,13 +4,13 @@
 
 The goal of the Free and Open Source Energy Efficiency Project (FEEP) is to improve the energy efficiency of free and open source software.
 
-Design and implementation of software has a significant impact on the energy consumption of the systems it is part of. By becoming aware of the factors how software affects energy consumption and providing tools to quantify them it is possibly to drive down energy consuption and increase energy efficiency. This contributes to a more sustainable use of energy as one of the shared resources of our planet. This project strives to achieve that for and through Free and Open Source Software (FOSS).
+Design and implementation of software has a significant impact on the energy consumption of the systems it is part of. By becoming aware of the factors how software affects energy consumption and providing tools to quantify them it is possibly to drive down energy consumption and increase energy efficiency. This contributes to a more sustainable use of energy as one of the shared resources of our planet. This project strives to achieve that for and through Free and Open Source Software (FOSS).
 
 Let's make energy efficient software part of our story so we can live up to our responsibility for this and future generations.
 
 ## Strategy
 
-As a first step we will collect energy consumption measurements of FOSS applications. Our first approach is using the [criteria for the Blue Angel environmental label](https://produktinfo.blauer-engel.de/uploads/criteriafile/en/DE-UZ%20215-202001-en-Criteria-2020-02-13.pdf) based on the [research by the Environmental Campus  Birkenfeld](https://www.umwelt-campus.de/en/research/projekte/green-software-engineering/projects/ufoplan-ssd-2015).
+As a first step we will collect energy consumption measurements of FOSS applications. Our first approach is using the [criteria for the Blue Angel environmental label](https://produktinfo.blauer-engel.de/uploads/criteriafile/en/DE-UZ%20215-202001-en-Criteria-2020-02-13.pdf) based on the [research by the Environmental Campus Birkenfeld](https://www.umwelt-campus.de/en/research/projekte/green-software-engineering/projects/ufoplan-ssd-2015).
 
 Later we intend to integrate measuring energy consumption into the development process of applications so that energy efficiency can become a quality metric for these applications.
 
@@ -22,14 +22,14 @@ We start this under the umbrella of KDE but are happy to welcome other projects 
 
 This repository contains the following resources:
 
-* [Usage scenarios](usage_scenarios) - Detailed Descriptions of usage scenarios for specific application types. These are the scenarios for which energy consumption will be measured.
-* [Measurement setup](measurement_setup.md) - Description of hardware and software setup for performing energy measurements. This defines comparable environments and tools how to do automated measurements.
+* [Usage scenarios](usage_scenarios) - Detailed descriptions of usage scenarios for specific application types. These are the scenarios for which energy consumption will be measured.
+* [Measurement setup](measurement_setup.md) - Description of hardware and software setup for performing energy measurements. This defines comparable environments and tools to do automated measurements.
 * [Test runs](test_runs) - Automation for doing test runs of specific applications for their corresponding usage scenarios.
 * [Measurements](measurements) - Results from measurements.
 
 ## Communication
 
-For discsussions around the topic and the work we are doing here we have the mailing list [energy-efficiency@kde.org](https://mail.kde.org/cgi-bin/mailman/listinfo/energy-efficiency). Feel free to post and subscribe there to get involved with the project.
+For discussions around the topic and the work we are doing here we have the mailing list [energy-efficiency@kde.org](https://mail.kde.org/cgi-bin/mailman/listinfo/energy-efficiency). Feel free to subscribe and post there to get involved with the project.
 
 We also have a Matrix channel [KDE Energy Efficiency](https://webchat.kde.org/#/room/#energy-efficiency:kde.org) for more direct ad-hoc discussions. Feel free to join there as well and have a chat about the topic.
 
