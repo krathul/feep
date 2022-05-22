@@ -20,7 +20,7 @@ To install the necessary SNMP info you also need to install the package `snmp-mi
 
 In the web interface of the measuring device you need to enable SNMP. Go to the Configuration tab, choose "Protocols" and then "SNMP" and check the checkboxes "Enable SNMP options". This enables SNMP v1 which is used by the measurement script.
 
-You also need to download the SNMP information for the measurement device. Click the link "MIB table" to show it and then save it to your local machine as `GUADES-EPC1202-MIB.txt`. Store it to `/usr/share/snmp/mibs` and set the environment variable to activate it: `export MIBS=+GUADES-EPC1202-MIB`.
+You also need to download the SNMP information for the measurement device. Click the link "MIB table" to show it and then save it to your local machine as `GUDEADS-EPC1202-MIB.txt`. Store it to `/usr/share/snmp/mibs` and set the environment variable to activate it: `export MIBS=+GUDEADS-EPC1202-MIB`.
 
 To configure the script `get_energy_utilization.py`, which reads the measurement data and writes it to a file, you have to set some more enviornment variables:
 
