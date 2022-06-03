@@ -43,5 +43,5 @@ Do we need to add an additional focus test on the application tested to avoid th
 - Add a comment mécanisme, if a line starts with # should be ignored
 - Choose an extension that would allow kate to use its comment mecanism adding # easilly (ctrl-D)
 - Find a way to avoid using ctrl-s in kate to avoid warning messages about external saving.
-- Solve the bug problem when using xdo.send_keysequence_window and xdo.enter_text_window. To solve it at the moment, we use os.system.
-
+- Add a goto mecanism.
+- Add a counter mecanism
