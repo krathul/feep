@@ -62,6 +62,26 @@ def writeToScreen():
     file1.write("\n")
     file1.close()
 
+def writeTimestampToLog():
+    print("Log timestamp command written to the sript.")
+    file1 = open(outputFilename, 'a')
+    file1.write("# Write Timestamp\n")
+    file1.write("writeTimestampToLog\n")
+    file1.write("\n")
+    file1.close()
+
+def writeMessageToLog():
+    print("Write a message to the log file, enter you text.")
+    textInput = input()
+    print("Text entered :" + textInput)
+    file1 = open(outputFilename, 'a')
+    file1.write("# Write message to the log.\n")
+    file1.write("writeMessageToLog \"" + textInput + "\"\n")
+    file1.write("\n")
+    file1.close()
+    print("Log timestamp command written to the sript.")
+
+
 
 #get input arguments
 parser = argparse.ArgumentParser()
@@ -90,10 +110,11 @@ def on_click(x, y, button, pressed):
                 file1.write(clickOnMsgStr + "\n")
                 file1.write(sleepMsgStr + "\n")
                 file1.write("\n")
-                print("# Click on\n")
-                print(clickOnMsgStr + "\n")
-                print(sleepMsgStr + "\n")
-                print("\n")
+                print("# Click on")
+                print(clickOnMsgStr)
+                print(sleepMsgStr)
+                # Using asynchronous is tricky, I am wondering how we could use the while True: loop to get its Enter command print. Meanwhile I am writting this fudge:
+                print("Enter Your command:\n")
 
     
 listener = mouse.Listener(
@@ -107,6 +128,8 @@ print("dw: define window.")
 print("ac: add clicks.")
 print("sc: stop add clicks.")
 print("ws: write to the screen.")
+print("wtl: write test timestamp to log.")
+print("wmtl: write message to log.")
 print("\n")
 
 print("To begin with, click on the application you want the script to be written for.")
@@ -125,6 +148,10 @@ while True:
         addClick()
     elif commandStr == "sc":
         stopClick()
+    elif commandStr == "wtl":
+        writeTimestampToLog()
+    elif commandStr == "wmtl":
+        writeMessageToLog()
     elif commandStr == "q":
         os.kill(os.getpid(), signal.SIGTERM)
     else:
