@@ -1,4 +1,3 @@
-# Modify Actiona script to adapt click coordinates to different screen resolutions
 import re
 import argparse
 import os
@@ -9,18 +8,8 @@ from pynput.keyboard import Key
 from xdo import Xdo
 import time
 import signal
-
-# Usage: KdeEcoTest uses as input script files. These can be created using KdeEcoTestCreator or by hand.
-# To start the test enter the following command:
-#   python3 KdeEcoTest.py --inputFilename inputScript.txt
-# To Pause the test, press F1.
-# To abort the program, press F2
-#
-# In order to run, KdeEcoTest and KdeEcoTestCreator require python-libxdo and pynput. Using your package manager you need to install pip, then you can use pip to install the modules.
-# - pip install python-libxdo
-# - pip install pynput
-# You also need to install the package xdotool using your prefered package manager.
-
+from datetime import datetime as dt
+import os.path
 
 window_defined = False
 writeMousePosToFile = False
@@ -46,6 +35,11 @@ def on_press(key):
         print('special key {0} pressed'.format(
             key))
 
+def writeToLog(logFileName, logStr):
+    file1 = open(logFileName, 'a')
+    file1.write(logStr)
+    file1.write("\n")
+    file1.close()
 
 
 def defineWindow():
@@ -71,14 +65,33 @@ def defineWindow():
 #get input arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--inputFilename", required=True, help = "Test script to be used with KdeEcoTest.")
+parser.add_argument("--testLogFilename", required=False, help = "Test log filename")
 args = parser.parse_args()
 intputFilename = args.inputFilename
+
+#get log filename, create a default one if none provided
+now = dt.now()
+testLogFilename = "KdeEcoLogFile_" + now.strftime("%Y-%m-%d_%H-%M-%S")
+print(testLogFilename)
+if args.testLogFilename is not None:
+    testLogFilename = args.testLogFilename
+
+print("--")
+print(intputFilename)
+print(testLogFilename)
+print("--")
+
+#Test if intputFilename exists
+if os.path.exists(intputFilename) == False:
+    print("Input filename {0} has not been found.".format(intputFilename))
+    os.kill(os.getpid(), signal.SIGTERM)
 
 listener = keyboard.Listener(
     on_press=on_press)
 listener.start()
 
 #get the location and size of the application to test
+print("Click on the application you want to test.")
 defineWindow()
 
 #read KdeEcoTest input file line by line and execute the test
@@ -135,9 +148,26 @@ while line != "":
             print(keyStr)
             os.system('xdotool key {0}'.format(keyStr))
 
+        strMatch = re.search('writeTimestampToLog "([^\"]*)"',line)
+        if strMatch:
+            print("Write timestamp to log.")
+            now = dt.now()
+            timestampStr = now.strftime("%a %m %y")
+            print('Timestamp:', timestampStr)
+            file1 = open(outputFilename, 'a')
+            file1.write("# Write message to the log.\n")
+            file1.write("writeMessageToLog \"" + textInput + "\"\n")
+            file1.write("\n")
+            file1.close()
+
+
 
         count += 1
-        print("Line{}: {}".format(count, line.strip()))
+        lineStr = "Line{:0>3d}: {}".format(count, line.strip())
+        print(lineStr)
+        if line.strip() != "":
+            now = dt.now()
+            writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + lineStr))
 
         line = file1.readline()
 
