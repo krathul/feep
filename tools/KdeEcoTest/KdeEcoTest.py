@@ -11,9 +11,16 @@ import signal
 from datetime import datetime as dt
 import os.path
 
-window_defined = False
+windowDefined = False
 writeMousePosToFile = False
 testIsRunning = True
+windowResized = False
+writeLineToFunctionsDict = False
+
+#declare the dictionnary where the functions will be stored
+functionsDict = {}
+global functionDict
+functionsIndex = 0
 
 def on_press(key):
     try:
@@ -54,13 +61,23 @@ def defineWindow():
     print(win_location.x)
     
     print(win_location.y)
-    global window_defined
-    window_defined = True
+    global windowDefined
+    windowDefined = True
 
     global win_size
     win_size = xdo.get_window_size(win_id)
     print(win_size.width)
     print(win_size.height)
+
+
+def executeFunction(functionNameStr):
+    print(functionsDict)
+    if functionNameStr not in functionsDict:
+        print("The function {} has not been defined.".format(functionNameStr))
+    else:
+        for line in functionsDict[functionNameStr]:
+            print(line)
+
 
 #get input arguments
 parser = argparse.ArgumentParser()
@@ -76,10 +93,6 @@ print(testLogFilename)
 if args.testLogFilename is not None:
     testLogFilename = args.testLogFilename
 
-print("--")
-print(intputFilename)
-print(testLogFilename)
-print("--")
 
 #Test if intputFilename exists
 if os.path.exists(intputFilename) == False:
@@ -94,10 +107,35 @@ listener.start()
 print("Click on the application you want to test.")
 defineWindow()
 
+#read KdeEcoTest input file line by line, output result in mainArray and functionsDict
+file1 = open(intputFilename, "r")
+lines = file1.readlines()
+print(lines)
+file1.close()
+
+functionName = ""
+for line in lines:
+    strMatch = re.search('^function ([\w_]*$)',line.lower())
+    if strMatch:
+        writeLineToFunctionsDict = True
+        functionName = strMatch.group(1)
+        functionsDict[functionName] = []
+
+    strMatch = re.search('^end$',line.lower())
+    if strMatch:
+        writeLineToFunctionsDict = False
+
+    if writeLineToFunctionsDict == True:
+        functionsDict[functionName].append(line)
+
+print(functionsDict)
+
+
 #read KdeEcoTest input file line by line and execute the test
 file1 = open(intputFilename, 'r')
 count = 0
 line = file1.readline()
+file1.close
 print(line)
 
 while line != "":
@@ -140,6 +178,7 @@ while line != "":
             origWin_width = strMatch.group(1)
             origWin_height = strMatch.group(2)
             os.system('xdotool windowsize {0} {1} {2}'.format(win_id,origWin_width,origWin_height))
+            windowResized = True
 
         strMatch = re.search('key (.*)',line)
         if strMatch:
@@ -154,13 +193,17 @@ while line != "":
             now = dt.now()
             timestampStr = now.strftime("%a %m %y")
             print('Timestamp:', timestampStr)
-            file1 = open(outputFilename, 'a')
-            file1.write("# Write message to the log.\n")
-            file1.write("writeMessageToLog \"" + textInput + "\"\n")
-            file1.write("\n")
-            file1.close()
+            f2 = open(outputFilename, 'a')
+            f2.write("# Write message to the log.\n")
+            f2.write("writeMessageToLog \"" + textInput + "\"\n")
+            f2.write("\n")
+            f2.close()
 
-
+        strMatch = re.search('^execFunction ([\w_]*$)',line)
+        if strMatch:
+            functionNameStr = strMatch.group(1)
+            print("Execute function {}".format(functionNameStr))
+            executeFunction(functionNameStr)
 
         count += 1
         lineStr = "Line{:0>3d}: {}".format(count, line.strip())
@@ -170,5 +213,9 @@ while line != "":
             writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + lineStr))
 
         line = file1.readline()
+
+#display warning if the tested app window has not been tested
+if windowResized == False:
+    print("Window app has not been resized, this could create some test errors.")
 
 
