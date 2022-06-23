@@ -1,0 +1,283 @@
+function testconfigvolumesetting
+    # Click on the GCompris configuration icon
+    click 631,760
+    sleep 2
+
+    # Click on the down blue arrow to reach the volume slider
+    click 749,733
+    sleep 2
+
+    # Set volume slider to low volume
+    click 144,585
+    sleep 2
+
+    # Set volume slider to high volume
+    click 384,581
+    sleep 2
+
+    # Set volume slider to low volume
+    click 163,586
+    sleep 2
+
+    # Click on
+    click 736,605
+    sleep 2
+
+    # Click on upper right green tick to escape configuration window
+    click 751,97
+    sleep 2
+end
+
+function testBabyWordProcessor
+    # Click on search icon to locate a new activity
+    click 788,35
+    sleep 2
+
+    # double click on the search input text form and enter the text "baby_wordprocessor"
+    click 342,109
+    sleep 0.1
+    click 342,109
+    write "baby_wordprocessor",342,109
+    sleep 2
+
+    # Click on the baby_wordprocessor activity icon
+    click 125,401
+    sleep 2
+
+    # Click within the baby_wordprocessor activity screen before to type
+    click 221,186
+    sleep 2
+
+    # Write a test phrase in baby wordprocessor
+    write "This is a test for the kde eco tester",221,186
+    sleep 2
+
+    # Comment
+    click 713,470
+    sleep 2
+
+    # Comment
+    click 275,71
+    sleep 2
+
+    # Comment
+    write "mon_fichier",275,71
+    sleep 2
+
+    # Comment
+    click 588,76
+    sleep 2
+
+    # Click on ok button to save the file
+    click 398,395
+    sleep 2
+
+    # Click on the red cross to close the window
+    click 765,80
+    sleep 2
+
+    # Click on load to get the saved files list
+    click 710,371
+    sleep 2
+
+    # Click on my_file icon to select it
+    click 82,236
+    sleep 2
+
+    # Click on delete to delete my_file
+    click 541,776
+    sleep 2
+
+    # Click on ok button to acknoledge the deletion
+    click 485,429
+    sleep 2
+
+    # Click on the read cross to exit load file window
+    click 737,64
+    sleep 2
+
+    # Click on GCompris Home button to exit baby_wordprocessor
+    click 416,740
+    sleep 2
+end
+
+
+function testChecker
+    # double click on the search input text form and enter the text "checker"
+    click 342,109
+    sleep 0.1
+    click 342,109
+    write "checker",342,109
+    sleep 2
+
+    # Click on Checker app to open it
+    click 144,255
+    sleep 2
+
+    # Click on checker to simulate a game
+    click 316,499
+    sleep 2
+
+    # Click on
+    click 261,435
+    sleep 2
+
+    # Click on
+    click 318,397
+    sleep 2
+
+    # Click on
+    click 253,439
+    sleep 2
+
+    # Click on
+    click 316,383
+    sleep 2
+
+    # Click on
+    click 508,325
+    sleep 2
+
+    # Click on
+    click 437,486
+    sleep 2
+
+    # Click on
+    click 321,381
+    sleep 2
+
+    # Click on
+    click 205,515
+    sleep 2
+
+    # Click on
+    click 256,444
+    sleep 2
+
+    # Click on
+    click 389,567
+    sleep 2
+
+    # Click on
+    click 240,424
+    sleep 2
+
+    # Click on
+    click 328,371
+    sleep 2
+
+    # Click on
+    click 371,322
+    sleep 2
+
+    # Click on
+    click 132,546
+    sleep 2
+
+    # Click on
+    click 249,440
+    sleep 2
+
+    # Click on Home to exit checker app
+    click 352,743
+    sleep 2
+
+    #End of checker game simulation
+end
+
+function testMusicWorld
+    # double click on the search input text form and enter the text "music"
+    click 514,102
+    sleep 0.1
+    click 514,102
+    write "music",342,109
+    sleep 2
+
+    # Click on "Music World" activity
+    click 514,102
+    sleep 2
+
+    # Click on different countries to discover the musics
+    click 759,32
+    sleep 2
+
+    # Click on
+    click 415,111
+    sleep 2
+
+    # Click on
+    click 149,322
+    sleep 2
+
+    # Click on
+    click 420,388
+    sleep 2
+
+    # Click on
+    click 325,377
+    sleep 2
+
+    # Click on
+    click 325,378
+    sleep 2
+
+    # Click on
+    click 743,92
+    sleep 2
+
+    # Click on
+    click 414,348
+    sleep 2
+
+    # Click on
+    click 368,480
+    sleep 2
+
+    # Click on
+    click 368,480
+    sleep 2
+
+    # Click on
+    click 746,90
+    sleep 2
+
+    # Click on
+    click 368,735
+    sleep 2
+
+end
+
+
+# Original window properties
+setWindowToOriginalSize 830,830
+
+# Start with a 2 second pause to let the user some time.
+sleep 2
+
+# Click in the activity bar puzzle icon.
+click 530,55
+sleep 2
+
+# Test config volume setting
+execFunction testconfigvolumesetting
+
+# Test Baby Wordprocessor
+execFunction testBabyWordProcessor
+
+# Test Checker
+execFunction testChecker
+
+# Test MusicWorld
+execFunction testMusicWorld
+
+# double click on the search input text form and enter the text "Test terminated :)"
+click 514,102
+sleep 0.1
+click 514,102
+write "Test terminated.",342,109
+sleep 2
+
+
+
+
+
