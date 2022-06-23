@@ -77,7 +77,78 @@ def executeFunction(functionNameStr):
         print("The function {} has not been defined.".format(functionNameStr))
     else:
         for line in functionsDict[functionNameStr]:
-            print(line)
+            readAndExecuteAction(line)
+
+def readAndExecuteAction(line):
+        strMatch = re.search('click (\d*),(\d*)',line.lineStr.lower())
+        if strMatch:
+            x = strMatch.group(1)
+            y = strMatch.group(2)
+            xdo.move_mouse(win_location.x + int(x), win_location.y + int(y))
+            xdo.click_window(win_id, 1)
+
+
+        strMatch = re.search('sleep ([\d\.]*)',line.lineStr.lower())
+        if strMatch:
+            sleep_time = strMatch.group(1)
+            time.sleep(float(sleep_time))
+
+        strMatch = re.search('write "([^\"]*)",(\d*),(\d*)',line.lineStr.lower())
+        if strMatch:
+            stringToWriteToScreen = strMatch.group(1)
+            string_x = strMatch.group(2)
+            string_y = strMatch.group(3)
+            xdo.move_mouse(win_location.x + int(string_x), win_location.x + int(string_y))
+
+            xdo.focus_window(win_id)
+            #xdo.wait_for_window_focus(win_id, 1)
+            os.system('xdotool type --window {0} --delay [500] \"{1}\" '.format(win_id,stringToWriteToScreen))
+
+        strMatch = re.search('moveWindowToOriginalLocation (\d*),(\d*)',line.lineStr)
+        if strMatch:
+            print("Move tested window to original location.")
+            origWin_x = strMatch.group(1)
+            origWin_y = strMatch.group(2)
+            os.system('xdotool windowmove {0} {1} {2}'.format(win_id,origWin_x,origWin_y))
+            #xdo.move_window(win_id, origWin_x, origWin_y)
+
+        strMatch = re.search('setWindowToOriginalSize (\d*),(\d*)',line.lineStr)
+        if strMatch:
+            print("Set tested window to original size.")
+            origWin_width = strMatch.group(1)
+            origWin_height = strMatch.group(2)
+            os.system('xdotool windowsize {0} {1} {2}'.format(win_id,origWin_width,origWin_height))
+            windowResized = True
+
+        strMatch = re.search('key (.*)',line.lineStr)
+        if strMatch:
+            print("Send key.")
+            keyStr = strMatch.group(1)
+            print(keyStr)
+            os.system('xdotool key {0}'.format(keyStr))
+
+        strMatch = re.search('writeTimestampToLog "([^\"]*)"',line.lineStr)
+        if strMatch:
+            print("Write timestamp to log.")
+            now = dt.now()
+            timestampStr = now.strftime("%a %m %y")
+            print('Timestamp:', timestampStr)
+            f2 = open(outputFilename, 'a')
+            f2.write("# Write message to the log.\n")
+            f2.write("writeMessageToLog \"" + textInput + "\"\n")
+            f2.write("\n")
+            f2.close()
+
+        lineStr = "Line{:0>3d}: {}".format(line.lineIndex, line.lineStr.strip())
+        print(lineStr)
+        if line.lineStr.strip() != "":
+            now = dt.now()
+            writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + lineStr))
+
+
+
+
+
 
 
 #get input arguments
@@ -128,7 +199,7 @@ for lineStr in lines:
 
     # add functions code to dictionnary functionsDict
     isFunctionDefinitionLine = False
-    strMatch = re.search('^function ([\w_]*$)',line.lineStr.lower())
+    strMatch = re.search('^function ([\w_]*$)',line.lineStr)
     if strMatch:
         isFunctionDefinitionLine = True
         writeLineToFunctionsDict = True
@@ -170,79 +241,17 @@ for key in functionsDict:
 print("----------------")
 
 #read mainArray and functionsDict to execute the test
+for line in mainArray:
+    if testIsRunning == True:
+        readAndExecuteAction(line)
 
-#for line in mainArray:
-    #if testIsRunning == True:
-        #strMatch = re.search('click (\d*),(\d*)',line.lineStr.lower())
-        #if strMatch:
-            #x = strMatch.group(1)
-            #y = strMatch.group(2)
-            #xdo.move_mouse(win_location.x + int(x), win_location.y + int(y))
-            #xdo.click_window(win_id, 1)
+        strMatch = re.search('^execFunction ([\w_]*$)',line.lineStr)
+        if strMatch:
+            print("------------")
+            functionNameStr = strMatch.group(1)
+            print("Execute function {}".format(functionNameStr))
+            executeFunction(functionNameStr)
 
-
-        #strMatch = re.search('sleep ([\d\.]*)',line.lineStr.lower())
-        #if strMatch:
-            #sleep_time = strMatch.group(1)
-            #time.sleep(float(sleep_time))
-
-        #strMatch = re.search('write "([^\"]*)",(\d*),(\d*)',line.lineStr.lower())
-        #if strMatch:
-            #stringToWriteToScreen = strMatch.group(1)
-            #string_x = strMatch.group(2)
-            #string_y = strMatch.group(3)
-            #xdo.move_mouse(win_location.x + int(string_x), win_location.x + int(string_y))
-
-            #xdo.focus_window(win_id)
-            ##xdo.wait_for_window_focus(win_id, 1)
-            #os.system('xdotool type --window {0} --delay [500] \"{1}\" '.format(win_id,stringToWriteToScreen))
-
-        #strMatch = re.search('moveWindowToOriginalLocation (\d*),(\d*)',line.lineStr)
-        #if strMatch:
-            #print("Move tested window to original location.")
-            #origWin_x = strMatch.group(1)
-            #origWin_y = strMatch.group(2)
-            #os.system('xdotool windowmove {0} {1} {2}'.format(win_id,origWin_x,origWin_y))
-            ##xdo.move_window(win_id, origWin_x, origWin_y)
-
-        #strMatch = re.search('setWindowToOriginalSize (\d*),(\d*)',line.lineStr)
-        #if strMatch:
-            #print("Set tested window to original size.")
-            #origWin_width = strMatch.group(1)
-            #origWin_height = strMatch.group(2)
-            #os.system('xdotool windowsize {0} {1} {2}'.format(win_id,origWin_width,origWin_height))
-            #windowResized = True
-
-        #strMatch = re.search('key (.*)',line.lineStr)
-        #if strMatch:
-            #print("Send key.")
-            #keyStr = strMatch.group(1)
-            #print(keyStr)
-            #os.system('xdotool key {0}'.format(keyStr))
-
-        #strMatch = re.search('writeTimestampToLog "([^\"]*)"',line.lineStr)
-        #if strMatch:
-            #print("Write timestamp to log.")
-            #now = dt.now()
-            #timestampStr = now.strftime("%a %m %y")
-            #print('Timestamp:', timestampStr)
-            #f2 = open(outputFilename, 'a')
-            #f2.write("# Write message to the log.\n")
-            #f2.write("writeMessageToLog \"" + textInput + "\"\n")
-            #f2.write("\n")
-            #f2.close()
-
-        #strMatch = re.search('^execFunction ([\w_]*$)',line.lineStr)
-        #if strMatch:
-            #functionNameStr = strMatch.group(1)
-            #print("Execute function {}".format(functionNameStr))
-            #executeFunction(functionNameStr)
-
-        #lineStr = "Line{:0>3d}: {}".format(line.lineIndex, line.lineStr.strip())
-        #print(lineStr)
-        #if line.lineStr.strip() != "":
-            #now = dt.now()
-            #writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + lineStr))
 
 
 #display warning if the tested app window has not been tested
