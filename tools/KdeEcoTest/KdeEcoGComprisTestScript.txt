@@ -220,14 +220,14 @@ function mainTest
     click 530,55
     sleep 2
 
-    ## Test config volume setting
-    #execFunction testconfigvolumesetting
+    # Test config volume setting
+    execFunction testconfigvolumesetting
 
-    ## Test Baby Wordprocessor
-    #execFunction testBabyWordProcessor
+    # Test Baby Wordprocessor
+    execFunction testBabyWordProcessor
 
-    ## Test Checker
-    #execFunction testChecker
+    # Test Checker
+    execFunction testChecker
 
     # Test MusicWorld
     execFunction testMusicWorld
@@ -246,7 +246,7 @@ end
 # Original window properties
 setWindowToOriginalSize 830,830
 
-repeatFunction mainTest,1
+repeatFunction mainTest,3
 
 
 

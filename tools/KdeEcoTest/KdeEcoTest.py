@@ -86,7 +86,6 @@ def readAndExecuteAction(line):
             commentTestStr = line.lineStr.strip()
             if len(commentTestStr) > 0:
                 if commentTestStr[0] == "#":
-                    print("Skip line {0}".format(commentTestStr))
                     return
 
 
