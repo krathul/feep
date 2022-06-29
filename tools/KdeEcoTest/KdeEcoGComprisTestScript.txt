@@ -103,10 +103,16 @@ end
 
 
 function testChecker
+    # Click on search icon to locate a new activity
+    click 788,35
+    sleep 2
+
     # double click on the search input text form and enter the text "checker"
-    click 342,109
+    click 514,102
     sleep 0.1
-    click 342,109
+    click 514,102
+    sleep 0.1
+    click 514,102
     write "checker",342,109
     sleep 2
 
@@ -114,68 +120,32 @@ function testChecker
     click 144,255
     sleep 2
 
+    # Click on
+    click 206,499
+    sleep 2
+
     # Click on checker to simulate a game
-    click 316,499
+    click 126,432
     sleep 2
 
     # Click on
-    click 261,435
+    click 680,489
     sleep 2
 
     # Click on
-    click 318,397
+    click 620,451
     sleep 2
 
     # Click on
-    click 253,439
+    click 266,557
     sleep 2
 
     # Click on
-    click 316,383
+    click 314,505
     sleep 2
 
     # Click on
-    click 508,325
-    sleep 2
-
-    # Click on
-    click 437,486
-    sleep 2
-
-    # Click on
-    click 321,381
-    sleep 2
-
-    # Click on
-    click 205,515
-    sleep 2
-
-    # Click on
-    click 256,444
-    sleep 2
-
-    # Click on
-    click 389,567
-    sleep 2
-
-    # Click on
-    click 240,424
-    sleep 2
-
-    # Click on
-    click 328,371
-    sleep 2
-
-    # Click on
-    click 371,322
-    sleep 2
-
-    # Click on
-    click 132,546
-    sleep 2
-
-    # Click on
-    click 249,440
+    click 205,387
     sleep 2
 
     # Click on Home to exit checker app
@@ -186,98 +156,97 @@ function testChecker
 end
 
 function testMusicWorld
+    # Click on search icon to locate a new activity
+    click 788,35
+    sleep 2
+
     # double click on the search input text form and enter the text "music"
     click 514,102
     sleep 0.1
     click 514,102
+    sleep 0.1
+    click 514,102
+
     write "music",342,109
     sleep 2
 
     # Click on "Music World" activity
-    click 514,102
-    sleep 2
-
-    # Click on different countries to discover the musics
-    click 759,32
+    click 125,401
     sleep 2
 
     # Click on
-    click 415,111
+    click 381,342
     sleep 2
 
     # Click on
-    click 149,322
+    click 746,79
     sleep 2
 
     # Click on
-    click 420,388
+    click 432,442
     sleep 2
 
     # Click on
-    click 325,377
+    click 385,439
     sleep 2
 
     # Click on
-    click 325,378
+    click 745,97
     sleep 2
 
     # Click on
-    click 743,92
+    click 605,388
     sleep 2
 
     # Click on
-    click 414,348
+    click 379,382
     sleep 2
 
     # Click on
-    click 368,480
+    click 760,88
     sleep 2
 
     # Click on
-    click 368,480
-    sleep 2
-
-    # Click on
-    click 746,90
-    sleep 2
-
-    # Click on
-    click 368,735
+    click 363,740
     sleep 2
 
 end
 
+function mainTest
+    # Start with a 2 second pause to let the user some time.
+    sleep 2
+
+    # Click in the activity bar puzzle icon.
+    click 530,55
+    sleep 2
+
+    ## Test config volume setting
+    #execFunction testconfigvolumesetting
+
+    ## Test Baby Wordprocessor
+    #execFunction testBabyWordProcessor
+
+    ## Test Checker
+    #execFunction testChecker
+
+    # Test MusicWorld
+    execFunction testMusicWorld
+
+    # double click on the search input text form and enter the text "Test terminated :)"
+    click 514,102
+    sleep 0.1
+    click 514,102
+    write "Test terminated.",342,109
+    sleep 2
+
+end
+
+# ----- start of main code ---------
 
 # Original window properties
 setWindowToOriginalSize 830,830
 
-# Start with a 2 second pause to let the user some time.
-sleep 2
-
-# Click in the activity bar puzzle icon.
-click 530,55
-sleep 2
-
-# Test config volume setting
-execFunction testconfigvolumesetting
-
-# Test Baby Wordprocessor
-execFunction testBabyWordProcessor
-
-# Test Checker
-execFunction testChecker
-
-# Test MusicWorld
-execFunction testMusicWorld
-
-# double click on the search input text form and enter the text "Test terminated :)"
-click 514,102
-sleep 0.1
-click 514,102
-write "Test terminated.",342,109
-sleep 2
-
-
+repeatFunction mainTest,1
 
 
 

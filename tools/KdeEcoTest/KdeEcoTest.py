@@ -72,21 +72,30 @@ def defineWindow():
 
 
 def executeFunction(functionNameStr):
-    print(functionsDict)
+    #print(functionsDict)
     if functionNameStr not in functionsDict:
         print("The function {} has not been defined.".format(functionNameStr))
     else:
         for line in functionsDict[functionNameStr]:
+            print(line.lineStr)
             readAndExecuteAction(line)
 
 def readAndExecuteAction(line):
+
+        if line.lineStr:
+            commentTestStr = line.lineStr.strip()
+            if len(commentTestStr) > 0:
+                if commentTestStr[0] == "#":
+                    print("Skip line {0}".format(commentTestStr))
+                    return
+
+
         strMatch = re.search('click (\d*),(\d*)',line.lineStr.lower())
         if strMatch:
             x = strMatch.group(1)
             y = strMatch.group(2)
             xdo.move_mouse(win_location.x + int(x), win_location.y + int(y))
             xdo.click_window(win_id, 1)
-
 
         strMatch = re.search('sleep ([\d\.]*)',line.lineStr.lower())
         if strMatch:
@@ -118,7 +127,9 @@ def readAndExecuteAction(line):
             origWin_width = strMatch.group(1)
             origWin_height = strMatch.group(2)
             os.system('xdotool windowsize {0} {1} {2}'.format(win_id,origWin_width,origWin_height))
+            global windowResized
             windowResized = True
+
 
         strMatch = re.search('key (.*)',line.lineStr)
         if strMatch:
@@ -138,6 +149,13 @@ def readAndExecuteAction(line):
             f2.write("writeMessageToLog \"" + textInput + "\"\n")
             f2.write("\n")
             f2.close()
+
+        strMatch = re.search('execFunction ([\w_]*$)',line.lineStr)
+        if strMatch:
+            functionNameStr = strMatch.group(1)
+            print("Execute function {}".format(functionNameStr))
+            executeFunction(functionNameStr)
+
 
         lineStr = "Line{:0>3d}: {}".format(line.lineIndex, line.lineStr.strip())
         print(lineStr)
@@ -186,7 +204,6 @@ class Line:
 
 file1 = open(intputFilename, "r")
 lines = file1.readlines()
-print(lines)
 file1.close()
 
 functionName = ""
@@ -213,48 +230,35 @@ for lineStr in lines:
         writeLineToFunctionsDict = False
 
     if writeLineToFunctionsDict == True and isFunctionDefinitionLine == False:
-        functionsDict[functionName].append(line)
+        if line.lineStr.find('repeatFunction') is not -1:
+            print("The current version of KdeEcoTest does not support use of repeatFunction within a function.")
+            print("Program aborted.")
+            os.kill(os.getpid(), signal.SIGTERM)
+        else:
+            functionsDict[functionName].append(line)
 
     # add main code to mainArray
     if writeLineToFunctionsDict == False and strMatch == None:
         mainArray.append(line)
 
 
-
-
-print("\n")
-print("Print main code")
-print("----------------")
-for line in mainArray:
-    print(str(line.lineIndex) + ":" + line.lineStr.strip())
-print("----------------")
-print("\n")
-
-print("Print functions code")
-print("----------------")
-for key in functionsDict:
-    print("function: " + key)
-    for line in functionsDict[key]:
-        print(str(line.lineIndex) + ": " + line.lineStr.strip())
-
-    print("")
-print("----------------")
-
 #read mainArray and functionsDict to execute the test
 for line in mainArray:
     if testIsRunning == True:
-        readAndExecuteAction(line)
 
-        strMatch = re.search('^execFunction ([\w_]*$)',line.lineStr)
+        strMatch = re.search('repeatFunction ([^\"]*),(\d*)',line.lineStr)
         if strMatch:
-            print("------------")
             functionNameStr = strMatch.group(1)
-            print("Execute function {}".format(functionNameStr))
-            executeFunction(functionNameStr)
+            nbOfRepetition = strMatch.group(2)
+            print("Execute function {0} {1} times.".format(functionNameStr, nbOfRepetition))
+            for i in range(int(nbOfRepetition)):
+                executeFunction(functionNameStr)
 
+        readAndExecuteAction(line)
 
 
 #display warning if the tested app window has not been tested
+print(windowResized)
 if windowResized == False:
     print("The tested window app has not been resized, this could result in test errors.")
 
