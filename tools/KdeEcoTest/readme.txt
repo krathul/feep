@@ -13,7 +13,7 @@ KdeEcoTestCreator creates the testing scrip that will be used by KdeEco test.
 To start KdeEcoTestCreator, type the following command:
   python3 KdeEcoTestCreator.py --outputFilename KdeEcoTestScript.txt
 A round mouse pointer appears. Click on the application you want to test.
-Open testOutputScript.txt into Kate (turn on Kate automatic file reloading).
+Open testOutputScript.txt into Kate
 Command prompt invites you to enter one of the available command.
   ac: adds comment line, click position and pause at the end of testOutputScript.txt.
      eg:
@@ -35,13 +35,6 @@ To abort the program, press F2
 
 
 To do:
-- add writing timestamp log function.
-- add writing action name log function.
 - While in pause, when modifiying the input script, KdeEco test is still recording any key entry.
 Do we need to add an additional focus test on the application tested to avoid this. This would allow to use space instead of F1 key to pause.
 - Try to find a mecanisme to use space and esc instead of f1 and f2 into KdeEcoTest to make the test application more user friendly.
-- Add a comment mécanisme, if a line starts with # should be ignored
-- Choose an extension that would allow kate to use its comment mecanism adding # easilly (ctrl-D)
-- Find a way to avoid using ctrl-s in kate to avoid warning messages about external saving.
-- Add a goto mecanism.
-- Add a counter mecanism
