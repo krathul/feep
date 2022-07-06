@@ -60,7 +60,7 @@ def defineWindow():
     global win_location
     win_location = xdo.get_window_location(win_id)
     print(win_location.x)
-    
+
     print(win_location.y)
     global windowDefined
     windowDefined = True
@@ -89,7 +89,7 @@ def readAndExecuteAction(line):
                     return
 
 
-        strMatch = re.search('click (\d*),(\d*)',line.lineStr.lower())
+        strMatch = re.search('click (-?\d*),(-?\d*)',line.lineStr.lower())
         if strMatch:
             x = strMatch.group(1)
             y = strMatch.group(2)
@@ -260,5 +260,3 @@ for line in mainArray:
 print(windowResized)
 if windowResized == False:
     print("The tested window app has not been resized, this could result in test errors.")
-
-
