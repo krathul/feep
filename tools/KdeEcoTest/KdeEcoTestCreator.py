@@ -42,9 +42,8 @@ def addClick():
         print("To add click mouse coordinates, first define which application is tested.")
         print("Enter the dw command (defined window) and click on the application.")
     else:
-        print("Every mouse click are now added to the end of the KdeEcoTest output file.")
+        print("Mouse click is now added to the end of the KdeEcoTest output file.")
 
-        print("Add click at " + str(win_location.x) + "," + str(win_location.y))
         global writeMousePosToFile
         writeMousePosToFile = True
 
@@ -135,6 +134,7 @@ listener.start()
 print("KdeEcoTestCreator helps to edit KdeEcoTest script files.")
 print("Commands:")
 print("dw: define window.")
+print("asc: after single click.")
 print("ac: add clicks.")
 print("sc: stop add clicks.")
 print("ws: write to the screen.")
