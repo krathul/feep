@@ -18,7 +18,7 @@ Gosund SP111 Setup
 --------------
 
 - the device opens a WiFi access point named "tasmota-XXXXX", connect to that
-- open http://192.168.4.1 in a browser
+- open `http://192.168.4.1` in a browser
 - the device asks you for the WiFi name and password to connect to
 - after entering those, the device will reconnect to that WiFi and disable its access point
 - while doing that it should show you its new address in the browser, make a note of that
@@ -31,7 +31,7 @@ Gosund SP111 Setup
 - you should see the Tasmota web UI (a big "ON/OFF" text and a bunch of blue and one red button)
 - click "Configuration"
 - click "Configure Other"
-- copy '{"NAME":"Gosund SP111 2","GPIO":[56,0,57,0,132,134,0,0,131,17,0,21,0],"FLAG":0,"BASE":18}' into the template input field (without the enclosing '')
+- copy `{"NAME":"Gosund SP111 2","GPIO":[56,0,57,0,132,134,0,0,131,17,0,21,0],"FLAG":0,"BASE":18}` into the template input field
 - tick the "Activate" checkbox
 - click "Save"
 - the device will restart, connect to it again
@@ -46,6 +46,7 @@ Gosund SP111 Setup
 - verify that the "Power Factor" value is shown as 1 (or very close to 1); if it is lower the current load is not suited for calibration
 - click "Console"
 - enter the following commands one at a time and press enter:
+```
 AmpRes 3
 VoltRes 3
 EnergyRes 3
@@ -53,7 +54,8 @@ WattRes 3
 FreqRes 3
 SetOption21 1﻿
 VoltageSet 230
-- enter the command "PowerSet XXX" with XXX replaced by the wattage specified for the test load (e.g. "40" for a 40W light bulb)
+```
+- enter the command `PowerSet XXX` with XXX replaced by the wattage specified for the test load (e.g. "40" for a 40W light bulb)
 - click "Main Menu"
 - the main page now should show correct power readings with several decimals precision
 
