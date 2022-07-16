@@ -86,6 +86,8 @@ def readAndExecuteAction(line):
             commentTestStr = line.lineStr.strip()
             if len(commentTestStr) > 0:
                 if commentTestStr[0] == "#":
+                    global commentActionStr
+                    commentActionStr = commentTestStr
                     return
 
 
@@ -155,15 +157,13 @@ def readAndExecuteAction(line):
             print("Execute function {}".format(functionNameStr))
             executeFunction(functionNameStr)
 
-
-        lineStr = "Line{:0>3d}: {}".format(line.lineIndex, line.lineStr.strip())
+        lineStr = "Line{:0>3d}; {}".format(line.lineIndex, line.lineStr.strip())
         print(lineStr)
+        commentActionStr = commentActionStr.lstrip('#')
         if line.lineStr.strip() != "":
             now = dt.now()
-            writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + lineStr))
-
-
-
+            writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + ";" + lineStr + ";" + commentActionStr))
+            commentActionStr = ' '
 
 
 
