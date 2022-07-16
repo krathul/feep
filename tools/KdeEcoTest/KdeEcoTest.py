@@ -229,7 +229,7 @@ for lineStr in lines:
         writeLineToFunctionsDict = False
 
     if writeLineToFunctionsDict == True and isFunctionDefinitionLine == False:
-        if line.lineStr.find('repeatFunction') is not -1:
+        if line.lineStr.find('repeatFunction') != -1:
             print("The current version of KdeEcoTest does not support use of repeatFunction within a function.")
             print("Program aborted.")
             os.kill(os.getpid(), signal.SIGTERM)
