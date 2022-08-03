@@ -17,6 +17,7 @@ writeMousePosToFile = False
 testIsRunning = True
 windowResized = False
 writeLineToFunctionsDict = False
+commentActionStr = ""
 
 #declare the dictionnary where the functions will be stored
 functionsDict = {}
@@ -81,6 +82,7 @@ def executeFunction(functionNameStr):
             readAndExecuteAction(line)
 
 def readAndExecuteAction(line):
+
 
         if line.lineStr:
             commentTestStr = line.lineStr.strip()
