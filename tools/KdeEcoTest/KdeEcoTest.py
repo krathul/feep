@@ -100,6 +100,16 @@ def readAndExecuteAction(line):
             xdo.move_mouse(win_location.x + int(x), win_location.y + int(y))
             xdo.click_window(win_id, 1)
 
+        strMatch = re.search('scrolldown',line.lineStr.lower())
+        if strMatch:
+            print("test scrolldown")
+            os.system('xdotool click 5')
+
+        strMatch = re.search('scrollup',line.lineStr.lower())
+        if strMatch:
+            print("test scrollup")
+            os.system('xdotool click 4')
+
         strMatch = re.search('sleep ([\d\.]*)',line.lineStr.lower())
         if strMatch:
             sleep_time = strMatch.group(1)
@@ -158,6 +168,8 @@ def readAndExecuteAction(line):
             functionNameStr = strMatch.group(1)
             print("Execute function {}".format(functionNameStr))
             executeFunction(functionNameStr)
+
+
 
         lineStr = "Line{:0>3d}; {}".format(line.lineIndex, line.lineStr.strip())
         print(lineStr)
