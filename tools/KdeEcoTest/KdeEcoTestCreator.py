@@ -53,6 +53,19 @@ def stopClick():
     global writeMousePosToFile
     writeMousePosToFile = False
 
+def scrollup():
+    file1 = open(outputFilename, 'a')
+    file1.write("scrollup\n")
+    file1.write("sleep 2\n")
+    file1.write("\n")
+    file1.close()
+
+def scrolldown():
+    file1 = open(outputFilename, 'a')
+    file1.write("scrolldown\n")
+    file1.write("sleep 2\n")
+    file1.write("\n")
+    file1.close()
 
 def writeToScreen():
     print("Write to the screen, enter you text.")
@@ -140,6 +153,8 @@ print("sc: stop add clicks.")
 print("ws: write to the screen.")
 print("wtl: write test timestamp to log.")
 print("wmtl: write message to log.")
+print("asu : after scroll up ")
+print("asd : after scroll down")
 print("\n")
 
 print("To begin with, click on the application you want the script to be written for.")
@@ -163,6 +178,10 @@ while True:
     elif commandStr == "asc":
         writeMouseOnce = True
         addClick()
+    elif commandStr == "asu":
+        scrollup()
+    elif commandStr == "asd":
+        scrolldown()
     elif commandStr == "wtl":
         writeTimestampToLog()
     elif commandStr == "wmtl":
