@@ -78,3 +78,41 @@ VoltageSet 230
 ---------------------------------
 
 - see scripts in https://volkerkrause.eu/2020/10/17/kde-cheap-power-measurement-tools.html 
+
+(9) Switching WiFi Networks
+---------------------------
+
+Once connected to a WiFi network Tasmota will not let you get back to step (2) by default for security reasons,
+without hard resetting the device (40sec button press). That however also removes all settings and the calibration.
+If you need to move to a different network, there are less drastic options available though, but those can only
+be taken inside the network you originally connected to:
+
+- Under Configuration > Configure WiFi you can add details for a second WiFi access point. Those will be tried
+alternatingly with the first configuration by default. This doesn't compromise security, but requires you to know
+the details for the network you want to connect to.
+- You can configure Tasmota to open an access point as in step (2) by default for a minute or so after boot, and
+then trying to connect to the known configurations. This makes booting slower in known networks, and opens the
+potential for hijacking the device, but it can be convenient when switching to unknown networks.
+This mode can be enabled in the Console by the command `WifiConfig 2`, and disabled by the command `WifiConfig 4`.
+
+For Tasmota version 11 the 40 sec button press reset can leave the device in a non-booting state, resetting from the
+Console using `Reset 1` doesn't have that problem, but has to be done before disconnecting from the known WiFi as well.
+
+(10) Recovering non-booting devices
+-----------------------------------
+
+With Tasmota 11 you can end up in a non-booting state by merely resetting the device using the 40 sec button press.
+This is not permanently damaging the device, but can be fixed with reflashing via a serial adapter.
+
+The basic process is described in https://tasmota.github.io/docs/Getting-Started/, the PCB layout of the
+Gosund SP 111 can be seen on https://templates.blakadder.com/gosund_SP111_v1_1.
+
+In order for this to work, you need to connect GPIO0 (second pin on bottom left in the above image) to GND
+**before** powering up (ie. before connecting USB). The device LEDs (red and blue) are a useful indicator
+whether you ended up in the right boot mode, red flashing quickly or red and blue being on is wrong, just red being
+on is correct. Once in that state the connection can be removed (e.g. if you just hold a jumper cable to the pin),
+it remains in the right mode until a reboot.
+
+Most importantly: **DO NOT CONNECT THE DEVICE TO MAIN POWER**! That would be life-threatening, the entire flashing
+process in solely powered from 3.3V supplied by the serial adapter. Do not do any of this without having read
+https://tasmota.github.io/docs/Getting-Started/.
