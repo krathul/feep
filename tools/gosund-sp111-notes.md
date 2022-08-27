@@ -62,17 +62,46 @@ VoltageSet 230
 (5) MQTT Broker Setup
 ---------------------
 
-- TODO
+The only known way for high-frequency automatic readouts so far is polling over MQTT. This is not ideal and
+needs additional setup unfortunately.
+
+If you happen to have a MQTT Broker around already, skip to step (6), otherweise you need to set up one. The below assumes Mosquitto
+is available packaged on your distribution, and doesn't configure any security, so only do this in your own
+trusted network and switch it off when not needed.
+
+- install the `mosquitto` package
+- add a file `/etc/mosquitto/conf.d/listen.conf` with the following content:
+```
+listener 1883
+allow_anonymous true
+```
+- start Mosquitto using `systemctl start mosquitto.service`
 
 (6) MQTT Tasmota Setup
 ----------------------
 
-- TODO
+Connect to the Tasmota device using a web browser, and open the MQTT configuration page via Configuration > Configure MQTT.
+Enter the IP address of the MQTT broker into the "Host" field.
+
+Note down the value shown right of the "Topic" label in parenthesis (typically something like "tasmota_xxxxxx"). This will be
+needed later on in addressing the device via MQTT. You can also change the default value to something easier to remember, but
+this has to be unique if you have multiple devices.
+
+Press Save.
+
+The device will restart and once it's back you should see output in its Console prefixed with "MQT".
 
 (7) Verifying MQTT Communication
 --------------------------------
 
-- TODO
+This assumes you have the Mosquitto client tools installed, which are usually available as distribution packages.
+
+You need two terminals to verify MQTT communication works as intended.
+- In terminal 1, run `mosquitto_sub -t 'stat/<topic>/STATUS10'`
+- In terminal 2, run `mosquitto_pub -t 'cmnd/<topic>/STATUS' -m '10'`
+
+Replace `<topic>` with the value noted down in step (6).
+Everytime you run the second command, you should see a set of values printed in the first terminal.
 
 (8) Continuous Power Measurements
 ---------------------------------
