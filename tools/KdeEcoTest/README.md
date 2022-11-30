@@ -39,7 +39,7 @@ $ cd feep/tools/KdeEcoTest/
 ```bash
 $ python3 KdeEcoTestCreator.py --outputFilename KdeEcoTestScript.txt
 ```
-- A round mouse pointer appears , Click on the window you want to test.Now, You can use these options provided by KdeEcoTestCreator to simulate actions and create a test script.
+- A round mouse pointer appears, Click on the window you want to test.Now, You can use these options provided by KdeEcoTestCreator to simulate actions and create a test script.
 ```shell
 Commands:
 dw: define window.
@@ -65,14 +65,14 @@ python3 KdeEcoTest.py --inputFilename KdeEcoTestScript.txt
 Contribute in the following ways:
 
 #### To-Do's
-- Negative value problem : There's a problem with negative values when script is created on another computer and played on a different computer.
+- Negative value problem : There's a problem with negative values when script is created on another computer and tested on a different computer.
 
-- Improve Interactions : Find a way to quit Kdeecotest(using space or esc) more easily , this means justmake the tool more easier for everyone to use.
+- Improve Interactions : Find a way to quit KdeEcoTest(using space or esc) more easily , this means just make the tool more easier for everyone to use.
 
-- Modal window : KDE-ECOTEST Doesn't record the clicks on modal window.We need to find a way to add it.
+- Modal window : KdeEcoTest doesn't record the clicks on modal window.We need to find a way to add it.
 
-- Keyboard Activity : Curently kdeecotest only capture mouse activity with typing text as the only keyboard activity. We want to record keyboard controls too,Find a way to add keyboard activity.
+- Keyboard Activity : Curently KdeEcoTest only capture mouse activity with typing text as the only keyboard activity. We want to record keyboard controls too,Find a way to add keyboard activity.
 
-- Documentation : You can always improve the documentation making it more easier forpeople to use this tool and contribute to it.
+- Documentation : You can always improve the documentation making it more easier for people to use this tool and contribute to it.
 
 Ask Questions at : [KDE-Energy Efficency Matrix](https://matrix.to/#/#energy-efficiency:kde.org)
