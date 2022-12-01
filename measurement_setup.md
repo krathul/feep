@@ -90,7 +90,7 @@ During the energy measurement we also need to record a set of performance indica
 
 Tool candidates:
 
-* [Collectl](http://collectl.sourceforge.net/)
+* [Collectl](https://sourceforge.net/projects/collectl/)
 
 ## Measurement process
 
