@@ -37,6 +37,8 @@ function testBabyWordProcessor
     click 342,109
     sleep 0.1
     click 342,109
+    sleep 0.1
+    click 342,109
     write "baby_wordprocessor",342,109
     sleep 2
 
@@ -160,14 +162,14 @@ function testMusicWorld
     click 788,35
     sleep 2
 
-    # double click on the search input text form and enter the text "music"
+    # double click on the search input text form and enter the text "explore_world_music"
     click 514,102
     sleep 0.1
     click 514,102
     sleep 0.1
     click 514,102
 
-    write "music",342,109
+    write "explore_world_music",342,109
     sleep 2
 
     # Click on "Music World" activity

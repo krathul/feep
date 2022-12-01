@@ -17,6 +17,7 @@ writeMousePosToFile = False
 testIsRunning = True
 windowResized = False
 writeLineToFunctionsDict = False
+commentActionStr = ""
 
 #declare the dictionnary where the functions will be stored
 functionsDict = {}
@@ -60,7 +61,7 @@ def defineWindow():
     global win_location
     win_location = xdo.get_window_location(win_id)
     print(win_location.x)
-    
+
     print(win_location.y)
     global windowDefined
     windowDefined = True
@@ -82,19 +83,32 @@ def executeFunction(functionNameStr):
 
 def readAndExecuteAction(line):
 
+
         if line.lineStr:
             commentTestStr = line.lineStr.strip()
             if len(commentTestStr) > 0:
                 if commentTestStr[0] == "#":
+                    global commentActionStr
+                    commentActionStr = commentTestStr
                     return
 
 
-        strMatch = re.search('click (\d*),(\d*)',line.lineStr.lower())
+        strMatch = re.search('click (-?\d*),(-?\d*)',line.lineStr.lower())
         if strMatch:
             x = strMatch.group(1)
             y = strMatch.group(2)
             xdo.move_mouse(win_location.x + int(x), win_location.y + int(y))
             xdo.click_window(win_id, 1)
+
+        strMatch = re.search('scrolldown',line.lineStr.lower())
+        if strMatch:
+            print("test scrolldown")
+            os.system('xdotool click 5')
+
+        strMatch = re.search('scrollup',line.lineStr.lower())
+        if strMatch:
+            print("test scrollup")
+            os.system('xdotool click 4')
 
         strMatch = re.search('sleep ([\d\.]*)',line.lineStr.lower())
         if strMatch:
@@ -156,14 +170,14 @@ def readAndExecuteAction(line):
             executeFunction(functionNameStr)
 
 
-        lineStr = "Line{:0>3d}: {}".format(line.lineIndex, line.lineStr.strip())
+
+        lineStr = "Line{:0>3d}; {}".format(line.lineIndex, line.lineStr.strip())
         print(lineStr)
+        commentActionStr = commentActionStr.lstrip('#')
         if line.lineStr.strip() != "":
             now = dt.now()
-            writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + lineStr))
-
-
-
+            writeToLog(testLogFilename,now.strftime("%Y-%m-%d_%H-%M-%S " + ";" + lineStr + ";" + commentActionStr))
+            commentActionStr = ' '
 
 
 
@@ -229,7 +243,7 @@ for lineStr in lines:
         writeLineToFunctionsDict = False
 
     if writeLineToFunctionsDict == True and isFunctionDefinitionLine == False:
-        if line.lineStr.find('repeatFunction') is not -1:
+        if line.lineStr.find('repeatFunction') != -1:
             print("The current version of KdeEcoTest does not support use of repeatFunction within a function.")
             print("Program aborted.")
             os.kill(os.getpid(), signal.SIGTERM)
@@ -260,5 +274,3 @@ for line in mainArray:
 print(windowResized)
 if windowResized == False:
     print("The tested window app has not been resized, this could result in test errors.")
-
-
