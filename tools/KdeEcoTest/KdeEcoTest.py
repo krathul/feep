@@ -26,9 +26,8 @@ mainArray = []
 
 def on_press(key):
     try:
-        print('alphanumeric key {0} pressed'.format(
-            key))
-        if key == Key.f1:
+        # print('alphanumeric key {0} pressed'.format(key))
+        if key == Key.space :
             global testIsRunning
             if testIsRunning == True:
                 testIsRunning = False
@@ -36,7 +35,7 @@ def on_press(key):
             else:
                 testIsRunning = True
                 print("The testing program is running.")
-        if key == Key.f2:
+        if key == Key.esc:
             print("Program aborted.")
             os.kill(os.getpid(), signal.SIGTERM)
 

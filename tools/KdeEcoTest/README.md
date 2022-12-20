@@ -23,6 +23,7 @@ KdeEcoTest and KdeEcoTestCreator is a cross-platform and CLI based python tool w
 ```bash
 $ pip3 install python-libxdo
 $ pip3 install pynput
+$ pip3 install tkinter
 $ sudo apt-get install xdotool
 ```
 
@@ -39,6 +40,9 @@ $ cd feep/tools/KdeEcoTest/
 ```bash
 $ python3 KdeEcoTestCreator.py --outputFilename KdeEcoTestScript.txt
 ```
+- To pause the test : Press Space
+- To abort the program : Press Esc
+
 - A round mouse pointer appears, Click on the window you want to test.Now, You can use these options provided by KdeEcoTestCreator to simulate actions and create a test script.
 ```shell
 Commands:
@@ -56,8 +60,8 @@ KdeEcoTest automates the actions stored in the script created by KdeEcoTestCreat
 ```bash
 python3 KdeEcoTest.py --inputFilename KdeEcoTestScript.txt
 ```
-- To pause the test : Press F1
-- To abort the program : Press F2
+- To pause the test : Press Space
+- To abort the program : Press Esc
 
 ### Want to contribute?
 > Before contributing, fork the repository and make a MR when you fix the issue.
@@ -66,8 +70,6 @@ Contribute in the following ways:
 
 #### To-Do's
 - Negative value problem : There's a problem with negative values when script is created on another computer and tested on a different computer.
-
-- Improve Interactions : Find a way to quit KdeEcoTest(using space or esc) more easily , this means just make the tool more easier for everyone to use.
 
 - Modal window : KdeEcoTest doesn't record the clicks on modal window.We need to find a way to add it.
 
