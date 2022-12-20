@@ -13,7 +13,6 @@ window_defined = False
 writeMousePosToFile = False
 writeMouseOnce = False
 
-
 def defineWindow():
     ## get application origin coordinates
     xdo = Xdo()
@@ -106,6 +105,24 @@ parser.add_argument("--outputFilename", required=True, help="Test script to be u
 args = parser.parse_args()
 outputFilename = args.outputFilename
 
+def on_press(key):
+    try:
+        # print('alphanumeric key {0} pressed'.format(key))
+        if key == Key.space :
+            global writeMousePosToFile
+            if writeMousePosToFile == True:
+                writeMousePosToFile = False
+                print("The testing program is on pause.")
+            else:
+                writeMousePosToFile = True
+                print("The testing program is running.")
+        if key == Key.esc:
+            print("Program aborted.")
+            os.kill(os.getpid(), signal.SIGTERM)
+
+    except AttributeError:
+        print('special key {0} pressed'.format(
+            key))
 
 def on_click(x, y, button, pressed):
     global writeMousePosToFile
@@ -142,6 +159,9 @@ def on_click(x, y, button, pressed):
 
 listener = mouse.Listener(
     on_click=on_click)
+listener.start()
+listener = keyboard.Listener(
+    on_press=on_press)
 listener.start()
 
 print("KdeEcoTestCreator helps to edit KdeEcoTest script files.")
