@@ -1,6 +1,4 @@
-This directory contains reports for the measurements made at the [Umwelt Campus Birkenfeld](https://www.umwelt-campus.de/en/institutes/iss).
-
-There is the automation for the usage scenario as an Actiona configuration as well as the reports about the data for both the "Idle Mode" and "Standard Usage Scenario".
+This directory contains reports for the measurements made at the [Umwelt Campus Birkenfeld](https://www.umwelt-campus.de/en/institutes/iss) for both the "Idle Mode" and "Standard Usage Scenario".
 
 The reference system for the data reported in this directory is from year 2018. 
 
