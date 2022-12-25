@@ -23,8 +23,16 @@ KdeEcoTest and KdeEcoTestCreator is a cross-platform and CLI based python tool w
 ```bash
 $ pip3 install python-libxdo
 $ pip3 install pynput
-$ pip3 install tkinter
+```
+
+```bash
+# debian/ubuntu
 $ sudo apt-get install xdotool
+$ sudo apt install python3-tk
+
+# arch
+$ sudo pacman -S xdotool
+$ sudo pacman -S tk
 ```
 
 ### Usage
