@@ -1,0 +1,28 @@
+# Original window properties
+setWindowToOriginalSize 1014,736
+
+# Click on
+# Menu
+# On the right
+click 690,649
+sleep 2
+
+# Click on Settings
+click 542,640
+sleep 2
+
+# Click on
+click 956,51
+sleep 2
+
+# Click on
+click 455,657
+sleep 2
+
+# Click on
+click 949,61
+sleep 2
+
+# Write message to the log.
+writeMessageToLog " This is a message from the creator"
+

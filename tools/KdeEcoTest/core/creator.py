@@ -1,19 +1,18 @@
-import re
-import argparse
 import os
-from pynput.mouse import Listener
-from pynput import mouse
-from pynput import keyboard
-from pynput.keyboard import Key
-import argparse
-from xdo import Xdo
 import signal
+
+from pynput import keyboard, mouse
+from pynput.keyboard import Key
+from xdo import Xdo
 
 window_defined = False
 writeMousePosToFile = False
 writeMouseOnce = False
 
-def defineWindow():
+
+outputFilename = "testscript.txt"
+
+def defineWindow(test_scirpt):
     ## get application origin coordinates
     xdo = Xdo()
     win_id = xdo.select_window_with_click()
@@ -28,7 +27,9 @@ def defineWindow():
     win_size = xdo.get_window_size(win_id)
 
     # SetWindowToOriginalSize will need to be used, but at the moment I do not know where. It has to be written because KdeEcoTest has to be applied on the same windows size than the original tested window.
-    file1 = open(outputFilename, 'a')
+    global outputFilename
+    outputFilename = test_scirpt
+    file1 = open(outputFilename, "a")
     file1.write("# Original window properties\n")
     # I comment moveWindowToOriginalLocation at the moment because I am not sure it is useful.
     # file1.write("moveWindowToOriginalLocation {0},{1}\n".format(win_location.x,win_location.y))
@@ -52,63 +53,62 @@ def stopClick():
     global writeMousePosToFile
     writeMousePosToFile = False
 
+
 def scrollup():
-    file1 = open(outputFilename, 'a')
+    file1 = open(outputFilename, "a")
     file1.write("scrollup\n")
     file1.write("sleep 2\n")
     file1.write("\n")
     file1.close()
 
+
 def scrolldown():
-    file1 = open(outputFilename, 'a')
+    file1 = open(outputFilename, "a")
     file1.write("scrolldown\n")
     file1.write("sleep 2\n")
     file1.write("\n")
     file1.close()
 
+
 def writeToScreen():
     print("Write to the screen, enter you text.")
     textInput = input()
     print("Text entered :" + textInput)
-    file1 = open(outputFilename, 'a')
+    file1 = open(outputFilename, "a")
     file1.write("# Comment\n")
-    file1.write("write \"" + textInput + "\"" + "," + str(windows_x) + "," + str(windows_y) + "\n")
+    file1.write('write "' + textInput + '"' + "," + str(windows_x) + "," + str(windows_y) + "\n")
     file1.write("sleep 2\n")
     file1.write("\n")
     file1.close()
 
-
-def writeTimestampToLog():
-    print("Log timestamp command written to the sript.")
-    file1 = open(outputFilename, 'a')
-    file1.write("# Write Timestamp\n")
-    file1.write("writeTimestampToLog\n")
-    file1.write("\n")
-    file1.close()
 
 
 def writeMessageToLog():
     print("Write a message to the log file, enter you text.")
     textInput = input()
     print("Text entered :" + textInput)
-    file1 = open(outputFilename, 'a')
+    file1 = open(outputFilename, "a")
     file1.write("# Write message to the log.\n")
-    file1.write("writeMessageToLog \"" + textInput + "\"\n")
+    file1.write('writeMessageToLog "' + textInput + '"\n')
     file1.write("\n")
     file1.close()
     print("Log timestamp command written to the sript.")
 
 
 # get input arguments
+"""
 parser = argparse.ArgumentParser()
-parser.add_argument("--outputFilename", required=True, help="Test script to be used with KdeEcoTest.")
+parser.add_argument(
+    "--outputFilename", required=True, help="Test script to be used with KdeEcoTest."
+)
 args = parser.parse_args()
-outputFilename = args.outputFilename
+"""
+
 
 def on_press(key):
     try:
         # print('alphanumeric key {0} pressed'.format(key))
-        if key == Key.space :
+        if key == Key.space:
             global writeMousePosToFile
             if writeMousePosToFile == True:
                 writeMousePosToFile = False
@@ -121,8 +121,8 @@ def on_press(key):
             os.kill(os.getpid(), signal.SIGTERM)
 
     except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
+        print("special key {0} pressed".format(key))
+
 
 def on_click(x, y, button, pressed):
     global writeMousePosToFile
@@ -130,7 +130,7 @@ def on_click(x, y, button, pressed):
     if writeMousePosToFile:
         if button == mouse.Button.left:
             if pressed:
-                if ((x > win_location.x + win_size.width) or (y > win_location.y + win_size.height)):
+                if (x > win_location.x + win_size.width) or (y > win_location.y + win_size.height):
                     print("Click outside window, do not record click")
                     return
 
@@ -139,9 +139,9 @@ def on_click(x, y, button, pressed):
                 windows_x = x - win_location.x
                 global windows_y
                 windows_y = y - win_location.y
-                file1 = open(outputFilename, 'a')
-                clickOnMsgStr = 'click {0},{1}'.format(windows_x, windows_y)
-                sleepMsgStr = 'sleep {0}'.format(2)
+                file1 = open(outputFilename, "a")
+                clickOnMsgStr = "click {0},{1}".format(windows_x, windows_y)
+                sleepMsgStr = "sleep {0}".format(2)
                 file1.write("# Click on\n")
                 file1.write(clickOnMsgStr + "\n")
                 file1.write(sleepMsgStr + "\n")
@@ -157,56 +157,53 @@ def on_click(x, y, button, pressed):
                     print("Enter Your command:\n")
 
 
-listener = mouse.Listener(
-    on_click=on_click)
-listener.start()
-listener = keyboard.Listener(
-    on_press=on_press)
-listener.start()
+def createTestScript(test_script):
+    listener = mouse.Listener(on_click=on_click)
+    listener.start()
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
 
-print("KdeEcoTestCreator helps to edit KdeEcoTest script files.")
-print("Commands:")
-print("dw: define window.")
-print("asc: add single click.")
-print("ac: add clicks.")
-print("sc: stop add clicks.")
-print("ws: write to the screen.")
-print("wtl: write test timestamp to log.")
-print("wmtl: write message to log.")
-print("asu : after scroll up ")
-print("asd : after scroll down")
-print("\n")
+    print("KdeEcoTestCreator helps to edit KdeEcoTest script files.")
+    print("Commands:")
+    print("dw: define window.")
+    print("asc: add single click.")
+    print("ac: add clicks.")
+    print("sc: stop add clicks.")
+    print("ws: write to the screen.")
+    print("wmtl: write message to log.")
+    print("asu : after scroll up ")
+    print("asd : after scroll down")
+    print("\n")
 
-print("To begin with, click on the application you want the script to be written for.")
-defineWindow()
+    print("To begin with, click on the application you want the script to be written for.")
+    defineWindow(test_script)
 
-while True:
-    if writeMouseOnce:
-        continue
+    while True:
+        global writeMouseOnce
+        if writeMouseOnce:
+            continue
 
-    print("Enter your command: ")
-    commandStr = input()
+        print("Enter your command: ")
+        commandStr = input()
 
-    if commandStr == "dw":
-        defineWindow()
-    elif commandStr == "ws":
-        writeToScreen()
-    elif commandStr == "ac":
-        addClick()
-    elif commandStr == "sc":
-        stopClick()
-    elif commandStr == "asc":
-        writeMouseOnce = True
-        addClick()
-    elif commandStr == "asu":
-        scrollup()
-    elif commandStr == "asd":
-        scrolldown()
-    elif commandStr == "wtl":
-        writeTimestampToLog()
-    elif commandStr == "wmtl":
-        writeMessageToLog()
-    elif commandStr == "q":
-        os.kill(os.getpid(), signal.SIGTERM)
-    else:
-        print("Command unknown.")
+        if commandStr == "dw":
+            defineWindow(test_script)
+        elif commandStr == "ws":
+            writeToScreen()
+        elif commandStr == "ac":
+            addClick()
+        elif commandStr == "sc":
+            stopClick()
+        elif commandStr == "asc":
+            writeMouseOnce = True
+            addClick()
+        elif commandStr == "asu":
+            scrollup()
+        elif commandStr == "asd":
+            scrolldown()
+        elif commandStr == "wmtl":
+            writeMessageToLog()
+        elif commandStr == "q":
+            os.kill(os.getpid(), signal.SIGTERM)
+        else:
+            print("Command unknown.")
