@@ -1,0 +1,210 @@
+
+function TestConfiguration
+    # Click on configuration icon at the bottom
+    click 442,528
+    sleep 2
+    
+    # Click on scroll button to go down
+    click 524,527
+    sleep 2
+    
+    # Toggle the sound button
+    click 64,198
+    sleep 2
+    
+    # Toggle the sound button
+    click 64,199
+    sleep 2
+    
+    # Toggle the sound button
+    click 61,199
+    sleep 2
+    
+    # Set the sound volume to low level
+    click 71,331
+    sleep 2
+    
+    # Set the sound volume to high level
+    click 387,329
+    sleep 2
+    
+    # Click on save configuration button
+    # Sleep time changed to 5 seconds because it takes time to save the configuration
+    click 527,61
+    sleep 5
+
+end
+
+function TestSearch
+    # Click on magnifying glass icon in the top bar
+    click 548,24
+    sleep 2
+    
+    # Click on search input field
+    click 287,75
+    sleep 2
+    
+    # Click on search input field
+    click 287,77
+    sleep 2
+    
+    # Write "word" in the search input field
+    write "word",287,77
+    sleep 2
+
+end
+
+function TestWordProcessorTypography
+    # Click on baby word processor icon
+    click 91,248
+    sleep 2
+    
+    # Focus on the text area
+    click 62,52
+    sleep 2
+    
+    # Write "This_is_text_from_Kde_ECO_tester" in the text area
+    write "This_is_text_from_Kde_ECO_tester",62,52
+    sleep 2
+    
+    # Click on Title button
+    click 477,56
+    sleep 2
+    
+    # Click on Subtitle button
+    click 495,128
+    sleep 2
+    
+    # Click on paragraph button
+    click 488,215
+    sleep 2
+
+end
+
+function TestSave
+    # Click on save button
+    click 485,346
+    sleep 2
+    
+    # Focus on the text input
+    click 91,54
+    sleep 2
+    
+    # Write "file_from_xdo" in the text input as a file name
+    write "file_from_xdo",91,54
+    sleep 2
+
+    # Click on save button
+    click 404,61
+    sleep 2
+    
+    # Click on OK button
+    click 309,276
+    sleep 2
+    
+    # Click on exit icon 
+    click 524,57
+    sleep 2
+    
+    # Click on Home icon at the bottom
+    click 295,509
+    sleep 2
+end
+
+function TestLoad
+    # Click on word processor icon again
+    click 96,262
+    sleep 2
+    
+    # Click on load button
+    click 470,283
+    sleep 2
+    
+    # Click on file_from_xdo file
+    click 52,160
+    sleep 2
+    
+    # Click on load button
+    click 136,547
+    sleep 2
+    
+    # Click on home icon at the bottom
+    click 306,523
+    sleep 2
+
+end
+
+function TestDelete
+    # Click on word processor icon again
+    click 97,253
+    sleep 2
+    
+    # Click on load button
+    click 475,279
+    sleep 2
+    
+    # Click on file_from_xdo file
+    click 56,163
+    sleep 2
+    
+    # Click on delete button
+    click 429,555
+    sleep 2
+    
+    # Click on OK button
+    click 293,285
+    sleep 2
+    
+    # Click on exit icon
+    click 531,39
+    sleep 2
+    
+    # Click on Home icon at the bottom
+    click 287,506
+    sleep 2
+
+end
+
+
+function mainTest
+    # Start with a 2 second pause to let the user some time.
+    sleep 2
+
+    # Click on puzzle icon in the top bar
+    click 380,32
+    sleep 2
+    
+    # Click on the sun icon in the top bar
+    click 33,28
+    sleep 2
+
+    # Test Configuration
+    execFunction TestConfiguration
+
+    # Test search
+    execFunction TestSearch
+
+    # Test word processor typography
+    execFunction TestWordProcessorTypography
+
+    # Test save
+    execFunction TestSave
+
+    # Test load
+    execFunction TestLoad
+
+    # Test delete
+    execFunction TestDelete
+    
+    # Click on the sun icon in the top bar
+    click 27,30
+    sleep 2
+
+end
+
+# Original window properties
+setWindowToOriginalSize 590,590
+
+execFunction mainTest
+
+
