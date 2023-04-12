@@ -4,7 +4,7 @@ from typing import Tuple, Type
 from .actions import (Action,
                       ActionType,
                       Click,
-                      Comment,
+                      Comment, DragMouse,
                       ExecuteFunction,
                       Key,
                       ReOriginWindow,
@@ -135,6 +135,7 @@ class TestParser:
             ActionType.REPEAT_FUNCTION: RepeatFunction,
             ActionType.LOG_MESSAGE: WriteMessageToLog,
             ActionType.COMMENT: Comment,
+            ActionType.DRAG_MOUSE: DragMouse
         }
         parsed_action = parsing_map[action_type]()
         parsed_action.parse(line)

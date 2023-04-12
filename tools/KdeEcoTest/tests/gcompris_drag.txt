@@ -1,0 +1,15 @@
+# Original window properties
+setWindowToOriginalSize 670,660
+
+# Click on
+click 510,582
+sleep 2
+
+# Click on
+click 609,590
+sleep 2
+
+# Drag
+dragMouse 136,393 to 381,394
+sleep 2
+
