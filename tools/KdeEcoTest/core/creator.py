@@ -1,5 +1,6 @@
 import os
 import signal
+import time
 
 from pynput import keyboard, mouse
 from pynput.keyboard import Key
@@ -8,6 +9,11 @@ from xdo import Xdo
 window_defined = False
 writeMousePosToFile = False
 writeMouseOnce = False
+
+clickForDrag = False
+dragStartRecorded = False
+dragEndRecorded = False
+
 
 
 outputFilename = "testscript.txt"
@@ -127,28 +133,53 @@ def on_press(key):
 def on_click(x, y, button, pressed):
     global writeMousePosToFile
     global writeMouseOnce
-    if writeMousePosToFile:
+    global clickForDrag
+    global dragStartRecorded
+    global dragEndRecorded
+    global windows_x
+    global windows_y
+
+    print("A click is detected")
+    print("for write ", writeMousePosToFile)
+    print("for drag: ", clickForDrag)
+    print("-------------------------")
+    if writeMousePosToFile or clickForDrag:
         if button == mouse.Button.left:
             if pressed:
                 if (x > win_location.x + win_size.width) or (y > win_location.y + win_size.height):
                     print("Click outside window, do not record click")
                     return
 
-                print("mouse click position added to the file")
-                global windows_x
                 windows_x = x - win_location.x
-                global windows_y
                 windows_y = y - win_location.y
-                file1 = open(outputFilename, "a")
-                clickOnMsgStr = "click {0},{1}".format(windows_x, windows_y)
-                sleepMsgStr = "sleep {0}".format(2)
-                file1.write("# Click on\n")
-                file1.write(clickOnMsgStr + "\n")
-                file1.write(sleepMsgStr + "\n")
-                file1.write("\n")
-                print("# Click on")
-                print(clickOnMsgStr)
-                print(sleepMsgStr)
+
+                print(" a click here") 
+                print("for drag: ", clickForDrag)
+
+                if clickForDrag:
+                    print("click for drag")
+                    if dragStartRecorded == False:
+                        dragStartRecorded = True
+                        print("Drag start recorded")
+                        
+                    elif dragEndRecorded == False:
+                        dragEndRecorded = True
+                        print("Drag end recorded")
+
+
+                else:
+                    print("mouse click position added to the file")
+                    file1 = open(outputFilename, "a")
+                    clickOnMsgStr = "click {0},{1}".format(windows_x, windows_y)
+                    sleepMsgStr = "sleep {0}".format(2)
+                    file1.write("# Click on\n")
+                    file1.write(clickOnMsgStr + "\n")
+                    file1.write(sleepMsgStr + "\n")
+                    file1.write("\n")
+                    print("# Click on")
+                    print(clickOnMsgStr)
+                    print(sleepMsgStr)
+
                 if writeMouseOnce:
                     writeMousePosToFile = False
                     writeMouseOnce = False
@@ -156,12 +187,57 @@ def on_click(x, y, button, pressed):
                     # Using asynchronous is tricky, I am wondering how we could use the while True: loop to get its Enter command print. Meanwhile I am writting this fudge:
                     print("Enter Your command:\n")
 
+# select start point and end point with mouse clicks and store them in a file
+def addDrag():
+    if window_defined == False:
+        print("To add drag mouse coordinates, first define which application is tested.")
+        print("Enter the dw command (defined window) and click on the application.")
+    else:
+        print("Mouse drag is now added to the end of the KdeEcoTest output file.")
+
+        global clickForDrag
+        clickForDrag = True
+
+        print("Click on the start point of the drag.")
+        global dragStartRecorded
+        while dragStartRecorded == False:
+            print("waiting for start point...")
+            time.sleep(1)
+            continue
+        dragStartRecorded = True
+
+        start_x = windows_x
+        start_y = windows_y
+
+        print("Click on the end point of the drag.")
+        global dragEndRecorded
+        while dragEndRecorded == False:
+            print("waiting for end point...")
+            time.sleep(1)
+            continue
+        dragEndRecorded = True
+
+        end_x = windows_x
+        end_y = windows_y
+
+        file1 = open(outputFilename, "a")
+        file1.write("# Drag\n")
+        file1.write("dragMouse {0},{1} to {2},{3}\n".format(start_x, start_y, end_x, end_y))
+        file1.write("sleep 2\n")
+        file1.write("\n")
+        file1.close()
+
+        print("Drag coordinates added to the file.")
+        print("Enter Your command:\n")
+
+
 
 def createTestScript(test_script):
-    listener = mouse.Listener(on_click=on_click)
-    listener.start()
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()
+    mouse_listener = mouse.Listener(on_click=on_click)
+    mouse_listener.start()
+
+    keyboard_listener = keyboard.Listener(on_press=on_press)
+    keyboard_listener.start()
 
     print("KdeEcoTestCreator helps to edit KdeEcoTest script files.")
     print("Commands:")
@@ -173,6 +249,7 @@ def createTestScript(test_script):
     print("wmtl: write message to log.")
     print("asu : after scroll up ")
     print("asd : after scroll down")
+    print("drg: add drag.")
     print("\n")
 
     print("To begin with, click on the application you want the script to be written for.")
@@ -197,6 +274,8 @@ def createTestScript(test_script):
         elif commandStr == "asc":
             writeMouseOnce = True
             addClick()
+        elif commandStr == "drg":
+            addDrag()
         elif commandStr == "asu":
             scrollup()
         elif commandStr == "asd":
