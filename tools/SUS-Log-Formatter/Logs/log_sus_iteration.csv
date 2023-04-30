@@ -1,0 +1,119 @@
+iteration 1;2023-02-01 08:53:20;;startTestrun
+iteration 1;2023-02-01 08:53:27;;go to line 100 
+iteration 1;2023-02-01 08:53:32;;toggle comment 
+iteration 1;2023-02-01 08:53:36;;find kconfig 
+iteration 1;2023-02-01 08:53:41;;move between searches 6 times  
+iteration 1;2023-02-01 08:53:51;;close find bar 
+iteration 1;2023-02-01 08:53:51;;standby 30 sec 
+iteration 1;2023-02-01 08:54:21;;go to line 200 
+iteration 1;2023-02-01 08:54:26;;select 10 lines 
+iteration 1;2023-02-01 08:54:29;;delete selected text 
+iteration 1;2023-02-01 08:54:39;;go 5 lines down 
+iteration 1;2023-02-01 08:54:41;;delete line 
+iteration 1;2023-02-01 08:54:51;;undo 
+iteration 1;2023-02-01 08:54:53;;undo again 
+iteration 1;2023-02-01 08:54:55;;redo 
+iteration 1;2023-02-01 08:55:00;;increase font size 
+iteration 1;2023-02-01 08:55:06;;toggle folding 
+iteration 1;2023-02-01 08:55:14;;decrease font size  
+iteration 1;2023-02-01 08:55:20;;enter full screen mode 
+iteration 1;2023-02-01 08:55:25;;exit full screen mode 
+iteration 1;2023-02-01 08:55:30;;print preview 
+iteration 1;2023-02-01 08:55:36;;go 2 lines down 
+iteration 1;2023-02-01 08:55:38;;set bookmark 
+iteration 1;2023-02-01 08:55:41;;go 5 lines down 
+iteration 1;2023-02-01 08:55:47;;select 10 lines  
+iteration 1;2023-02-01 08:55:53;;cut 
+iteration 1;2023-02-01 08:55:58;;standby 30 sec 
+iteration 1;2023-02-01 08:56:28;;go 5 lines down 
+iteration 1;2023-02-01 08:56:31;;paste 
+iteration 1;2023-02-01 08:56:36;;close 
+iteration 1;2023-02-01 08:56:39;;discard the current file  
+iteration 1;2023-02-01 08:56:50;;open new file 
+iteration 1;2023-02-01 08:56:55;;standby 5 sec 
+iteration 1;2023-02-01 08:57:00;;type lorem ipsum 
+iteration 1;2023-02-01 08:57:30;;enable spell checking 
+iteration 1;2023-02-01 08:57:35;;toggle line numbers 
+iteration 1;2023-02-01 08:57:40;;go to the begining of the line 
+iteration 1;2023-02-01 08:57:45;;disable spell checking 
+iteration 1;2023-02-01 08:57:50;;uppercase 
+iteration 1;2023-02-01 08:57:53;;toggle line numbers 
+iteration 1;2023-02-01 08:57:58;;lowercase 
+iteration 1;2023-02-01 08:58:03;;save file 
+iteration 1;2023-02-01 08:58:12;;create new file 
+iteration 1;2023-02-01 08:58:17;;type lorem ipsum 
+iteration 1;2023-02-01 08:58:42;;quit kate 
+iteration 1;2023-02-01 08:58:51;stopTestrun
+iteration 2;2023-02-01 08:58:54;startTestrun
+iteration 2;2023-02-01 08:59:01;;go to line 100 
+iteration 2;2023-02-01 08:59:06;;toggle comment 
+iteration 2;2023-02-01 08:59:10;;find kconfig 
+iteration 2;2023-02-01 08:59:15;;move between searches 6 times  
+iteration 2;2023-02-01 08:59:25;;close find bar 
+iteration 2;2023-02-01 08:59:25;;standby 30 sec 
+iteration 2;2023-02-01 08:59:55;;go to line 200 
+iteration 2;2023-02-01 09:00:00;;select 10 lines 
+iteration 2;2023-02-01 09:00:03;;delete selected text 
+iteration 2;2023-02-01 09:00:13;;go 5 lines down 
+iteration 2;2023-02-01 09:00:15;;delete line 
+iteration 2;2023-02-01 09:00:25;;undo 
+iteration 2;2023-02-01 09:00:27;;undo again 
+iteration 2;2023-02-01 09:00:29;;redo 
+iteration 2;2023-02-01 09:00:34;;increase font size 
+iteration 2;2023-02-01 09:00:40;;toggle folding 
+iteration 2;2023-02-01 09:00:48;;decrease font size  
+iteration 2;2023-02-01 09:00:54;;enter full screen mode 
+iteration 2;2023-02-01 09:00:59;;exit full screen mode 
+iteration 2;2023-02-01 09:01:04;;print preview 
+iteration 2;2023-02-01 09:01:10;;go 2 lines down 
+iteration 2;2023-02-01 09:01:12;;set bookmark 
+iteration 2;2023-02-01 09:01:15;;go 5 lines down 
+iteration 2;2023-02-01 09:01:21;;select 10 lines  
+iteration 2;2023-02-01 09:01:27;;cut 
+iteration 2;2023-02-01 09:01:32;;standby 30 sec 
+iteration 2;2023-02-01 09:02:02;;go 5 lines down 
+iteration 2;2023-02-01 09:02:05;;paste 
+iteration 2;2023-02-01 09:02:10;;close 
+iteration 2;2023-02-01 09:02:13;;discard the current file  
+iteration 2;2023-02-01 09:02:24;;open new file 
+iteration 2;2023-02-01 09:02:29;;standby 5 sec 
+iteration 2;2023-02-01 09:02:34;;type lorem ipsum 
+iteration 2;2023-02-01 09:03:04;;enable spell checking 
+iteration 2;2023-02-01 09:03:09;;toggle line numbers 
+iteration 2;2023-02-01 09:03:14;;go to the begining of the line 
+iteration 2;2023-02-01 09:03:19;;disable spell checking 
+iteration 2;2023-02-01 09:03:24;;uppercase 
+iteration 2;2023-02-01 09:03:27;;toggle line numbers 
+iteration 2;2023-02-01 09:03:32;;lowercase 
+iteration 2;2023-02-01 09:03:37;;save file 
+iteration 2;2023-02-01 09:03:46;;create new file 
+iteration 2;2023-02-01 09:03:51;;type lorem ipsum 
+iteration 2;2023-02-01 09:04:16;;quit kate 
+iteration 2;2023-02-01 09:04:25;stopTestrun
+iteration 3;2023-02-01 09:04:28;startTestrun
+iteration 3;2023-02-01 09:04:35;;go to line 100 
+iteration 3;2023-02-01 09:04:40;;toggle comment 
+iteration 3;2023-02-01 09:04:44;;find kconfig 
+iteration 3;2023-02-01 09:04:49;;move between searches 6 times  
+iteration 3;2023-02-01 09:04:59;;close find bar 
+iteration 3;2023-02-01 09:04:59;;standby 30 sec 
+iteration 3;2023-02-01 09:05:29;;go to line 200 
+iteration 3;2023-02-01 09:05:34;;select 10 lines 
+iteration 3;2023-02-01 09:05:37;;delete selected text 
+iteration 3;2023-02-01 09:05:47;;go 5 lines down 
+iteration 3;2023-02-01 09:05:49;;delete line 
+iteration 3;2023-02-01 09:05:59;;undo 
+iteration 3;2023-02-01 09:06:01;;undo again 
+iteration 3;2023-02-01 09:06:03;;redo 
+iteration 3;2023-02-01 09:06:08;;increase font size 
+iteration 3;2023-02-01 09:06:14;;toggle folding 
+iteration 3;2023-02-01 09:06:22;;decrease font size  
+iteration 3;2023-02-01 09:06:28;;enter full screen mode 
+iteration 3;2023-02-01 09:06:33;;exit full screen mode 
+iteration 3;2023-02-01 09:06:38;;print preview 
+iteration 3;2023-02-01 09:06:44;;go 2 lines down 
+iteration 3;2023-02-01 09:06:46;;set bookmark 
+iteration 3;2023-02-01 09:06:49;;go 5 lines down 
+iteration 3;2023-02-01 09:06:55;;select 10 lines  
+iteration 3;2023-02-01 09:07:01;;cut 
+iteration 3;2023-02-01 09:07:06;;standby 30 sec 
