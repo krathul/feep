@@ -13,17 +13,25 @@ syncUp() {
 
 # timestamp function is used to output the time and action into log.csv file.
 timestamp() {
-    echo "iteration $1;$(date -I) $(date +%T);$2 " >> ~/log.csv   
+    echo "iteration $1;$(date -I) $(date +%T);;$2 " >> ~/log_sus.csv
 
 }
 
 # Loop running for 30 times
 # start loop
 for ((i = 1 ; i <= 30 ; i++)); do
-    
-    timestamp "$i" "start iteration"
+
+    # burn in
+    syncUp 10 #60
+
+    # start
+    echo "iteration $i;$(date -I) $(date +%T);startTestrun" >> ~/log_sus.csv
     echo "start iteration $i"
-    syncUp 60
+
+    # start pause
+    syncUp 5
+
+    # open kate
     kate ~/katemainwindow.cpp > /dev/null 2>&1 &   
     syncUp 5
 
@@ -82,7 +90,7 @@ for ((i = 1 ; i <= 30 ; i++)); do
     # prev
     xdotool key Shift+F3
     syncUp 1
-	
+    
     timestamp "$i" "close find bar"
     # close find bar
     xdotool key Escape
@@ -284,7 +292,7 @@ for ((i = 1 ; i <= 30 ; i++)); do
     xdotool key Return
     syncUp 5
 
-    # when you discard an old file , a new file is automatically created	
+    # when you discard an old file , a new file is automatically created    
 
     echo " standby 5 sec "
     #standby 5 sec
@@ -410,6 +418,8 @@ for ((i = 1 ; i <= 30 ; i++)); do
     xdotool key Return
     syncUp 5
 
+    # wrap-up
+    # quit kate
     echo " quit kate "
     timestamp "$i" "quit kate"
     xdotool key Ctrl+1            #custom
@@ -421,7 +431,8 @@ for ((i = 1 ; i <= 30 ; i++)); do
 
     # stop iteration
     echo " stop  iteration "
-    timestamp "$i" "stop iteration"
+    echo "iteration $i;$(date -I) $(date +%T);stopTestrun" >> ~/log_sus.csv
+    syncUp 1
 
     # Remove logs
     rm ~/somefile.txt
@@ -435,4 +446,3 @@ done
 
 #end loop
 #end script
-
