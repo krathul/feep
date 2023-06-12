@@ -1,0 +1,111 @@
+# Original window properties
+setWindowToOriginalSize 590,590
+
+# Click on
+click 550,25
+sleep 2
+
+# Click on
+click 296,80
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["k", "e", "y"]
+sleep 2
+
+# Click on
+click 327,248
+sleep 2
+
+# Click on
+click 166,167
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["h", "e", "l", "l", "o", "en", "2", "3", "4", "5", "6", "en", "sh", "#", "$", "%", "^", "&", "*", "(", ")", "_", "sh", "\"", "en", "'", ";", "up", "up", "up", "rt", "rt", "rt", "rt", "en", "f", "r", "o", "m", "sp", "a", "r", "r", "o", "w", "s", "en", "tb", "d", "o", "n", "e"]
+sleep 2
+
+# Click on
+click 478,359
+sleep 2
+
+# Click on
+click 160,63
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["f", "i", "l", "e"]
+sleep 2
+
+# Click on
+click 409,46
+sleep 2
+
+# Click on
+click 293,282
+sleep 2
+
+# Click on
+click 394,50
+sleep 2
+
+# Click on
+click 333,281
+sleep 2
+
+# Click on
+click 528,39
+sleep 2
+
+# Click on
+click 485,296
+sleep 2
+
+# Click on
+click 528,41
+sleep 2
+
+# Click on
+click 292,507
+sleep 2
+
+# Click on
+click 33,25
+sleep 2
+
+# Click on
+click 546,15
+sleep 2
+
+# Click on
+click 366,72
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["bs", "bs", "bs", "bs", "e", "o", "t", "bs", "bs", "bs", "w", "o", "r", "d"]
+sleep 2
+
+# Click on
+click 100,231
+sleep 2
+
+# Click on
+click 507,308
+sleep 2
+
+# Click on
+click 516,49
+sleep 2
+
+# Click on
+click 278,530
+sleep 2
+
+# Click on
+click 32,18
+sleep 2
+
+# Click on
+click 225,351
+sleep 2
+

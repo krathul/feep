@@ -1,4 +1,5 @@
 from pathlib import Path
+from loguru import logger
 
 from xdo import window_location, window_size
 
@@ -12,7 +13,7 @@ class Line:
 class TestScript:
     def __init__(self, file_path: Path) -> None:
         if not file_path.exists():
-            print(f"Error: file {file_path} does not exist.")
+            logger.error(f"Error: file {file_path} does not exist.")
             exit(1)
 
         self.lines: list[Line] = []
@@ -20,7 +21,7 @@ class TestScript:
             self.lines = [Line(*line) for line in enumerate(test_file.readlines())]
 
 
-class TestWindow:
+class Window:
     def __init__(self, id, location, size):
         self.id: int = id
         self.location: window_location = location

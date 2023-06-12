@@ -7,6 +7,7 @@ name = "pypi"
 pynput = "==1.7.*"
 python-libxdo = "*"
 typer = {extras = ["all"], version = "*"}
+loguru = "*"
 
 [dev-packages]
 black = "*"

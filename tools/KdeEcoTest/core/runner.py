@@ -3,62 +3,73 @@ import signal
 from datetime import datetime as dt
 from pathlib import Path
 
+from loguru import logger
 from pynput import keyboard
 from pynput.keyboard import Key
 from xdo import Xdo
 
-from core.actions import ActionType, Comment
+from core.actions import Action, Comment
 
-from .helpers import TestScript, TestWindow
-from .parser import TestParser
+from .helpers import TestScript, Window
+from .parser import Parser
 
 NOT_RESIZED_WARNING = (
     "The window was not resized to the original size. The test may not work as expected."
 )
 
-TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-
-class TestContext:
+class Context:
     def __init__(self, test_script: TestScript, log_file: Path):
-        self.test_parser = TestParser(test_script)
-        self.test_window: TestWindow
+        self.test_parser = Parser(test_script)
+        self.test_window: Window
         self.window_resized: bool = self.test_parser.window_resized
+        self.window_relocated: bool = self.test_parser.window_relocated
         self.description_stack = []
         self.log_file = log_file
+        self.iteration = 1
+
+    def executeAction(self, action: Action):
+        if not isinstance(action, Comment):
+            self.popToLogs()
+        action.execute(self)
 
     def executeFunction(self, name: str):
+        self.popToLogs()
         f_actions = self.test_parser.functions[name]
         for action in f_actions:
-            action.execute(self)
+            self.executeAction(action)
+
+    def setIteration(self, iteration: int):
+        self.iteration = iteration
 
     def writeToLog(self, log_str: str):
         with open(self.log_file, "a") as log:
             log.write(log_str)
             log.write("\n")
 
-    def writeToLogFormatted(self, message: str, iteration: int = -1, status: str=""):
-        now = dt.now()
-        str_to_write = f"{now.strftime(TIMESTAMP_FORMAT)};{status};{message}"
-        if iteration > -1:
-            str_to_write = f"{iteration};{str_to_write}"
+    def writeToLogFormatted(self, message: str, status: str = ""):
+        TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
+        timestamp = dt.now().strftime(TIMESTAMP_FORMAT)
+        iteration = f"iteration {self.iteration}"
+        str_to_write = f"{timestamp};{status};{message};{iteration}"
         self.writeToLog(str_to_write)
 
     def pushToDesciptionStack(self, description: str):
         self.description_stack.append(description)
 
-    def popDescriptionStackToLog(self):
+    def popToLogs(self):
         # join the descriptions in a single string
-        description = ", ".join(self.description_stack)
-        self.writeToLogFormatted(description)
-        self.description_stack = []
+        if len(self.description_stack) > 0:
+            description = ", ".join(self.description_stack)
+            self.writeToLogFormatted(description)
+            self.description_stack = []
 
 
-class TestRunner:
+class Runner:
     def __init__(self, test_script: TestScript, log_file: Path):
         self.test_script = test_script
         self.is_running: bool = True
-        self.context: TestContext = TestContext(test_script, log_file)
+        self.context: Context = Context(test_script, log_file)
 
         self.xdo = Xdo()
         self.key_listener = keyboard.Listener(on_press=self._onPress)
@@ -71,27 +82,30 @@ class TestRunner:
         actions = self.context.test_parser.main_actions
 
         if not self.context.window_resized:
-            print(f"WARNING: {NOT_RESIZED_WARNING}")
+            logger.warning(NOT_RESIZED_WARNING)
 
         self.context.writeToLogFormatted("", status="startTestrun")
 
+        self.xdo.focus_window(self.context.test_window.id)
         for action in actions:
             if self.is_running:
-                action.execute(self.context)
-                if not isinstance(action, Comment):
-                    self.context.popDescriptionStackToLog()
+                self.context.executeAction(action)
 
         self.context.writeToLogFormatted("", status="stopTestrun")
 
-    def _defineWindow(self) -> TestWindow:
+    def _defineWindow(self) -> Window:
         win_id = self.xdo.select_window_with_click()
         win_location = self.xdo.get_window_location(win_id)
         win_size = self.xdo.get_window_size(win_id)
         self.window_defined = True
 
-        print(f"[Window]: {win_location}, {win_size}")
+        log_str = "<green>Window defined with id: {}, at ({}, {}), with size {}x{}</green>"
+        log_str = log_str.format(
+            win_id, win_location.x, win_location.y, win_size.width, win_size.height
+        )
+        logger.opt(colors=True).info(log_str)
 
-        return TestWindow(win_id, win_location, win_size)
+        return Window(win_id, win_location, win_size)
 
     def _onPress(self, key):
         try:
@@ -104,7 +118,7 @@ class TestRunner:
 
             """
             if key == Key.esc:
-                print("Program aborted.")
+                logger.opt(colors=True).info("<red>Program aborted.</red>")
                 os.kill(os.getpid(), signal.SIGTERM)
         except AttributeError:
-            print(f"special key {key} pressed")
+            logger.opt(colors=True).info(f"Special key {key} pressed.")
