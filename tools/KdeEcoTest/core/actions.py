@@ -1,18 +1,25 @@
 from __future__ import annotations
 
+import json
 import os
 import re
 import time
 from abc import ABC, abstractmethod
 from datetime import datetime as dt
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
+from xdo import window_location
 
+from loguru import logger
+from pynput import keyboard
+from pynput.keyboard import Key
 from xdo import Xdo
+
+from .constants import OPTIMIZED_KEYS_MAP, KEYS_MAP
 
 if TYPE_CHECKING:
     from .helpers import Line
-    from .runner import TestContext
+    from .runner import Context
 
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -30,6 +37,7 @@ class ActionType(str, Enum):
     EXECUTE_FUNCTION = "execFunction"
     REPEAT_FUNCTION = "repeatFunction"
     DRAG_MOUSE = "dragMouse"
+    KEYBOARD_WRITE = "writeRecordedKeys"
     COMMENT = "#"  # not an action, but it is used to parse comments as comments creates logs
 
 
@@ -41,7 +49,7 @@ class Action(ABC):
         pass
 
     @abstractmethod
-    def execute(self, ctx: TestContext):
+    def execute(self, ctx: Context):
         pass
 
 
@@ -61,6 +69,8 @@ class Click(Action):
         test_window = ctx.test_window
         w_id, w_x, w_y = test_window.id, test_window.location.x, test_window.location.y
         self.xdo.move_mouse(w_x + int(self.x), w_y + int(self.y))
+        w_id = self.xdo.get_window_at_mouse()
+        self.xdo.focus_window(w_id)
         self.xdo.click_window(w_id, 1)
 
 
@@ -69,7 +79,6 @@ class ScrollUp(Action):
         return
 
     def execute(self, _):
-        print("test scrolldown")
         os.system("xdotool click 4")
 
 
@@ -78,7 +87,6 @@ class ScrollDown(Action):
         return
 
     def execute(self, _):
-        print("test scrolldown")
         os.system("xdotool click 5")
 
 
@@ -112,15 +120,11 @@ class Write(Action):
 
     def execute(self, ctx):
         test_window = ctx.test_window
-        w_x = test_window.location.x
-        self.xdo.move_mouse(w_x + int(self.str_x), w_x + int(self.str_y))
-        self.xdo.focus_window(test_window.id)
-        # xdo.wait_for_window_focus(win_id, 1)
-        os.system(
-            'xdotool type --window {0} --delay [500] "{1}" '.format(
-                test_window.id, self.str_to_write
-            )
-        )
+        w_id, w_x, w_y = test_window.id, test_window.location.x, test_window.location.y
+        self.xdo.move_mouse(w_x + int(self.str_x), w_y + int(self.str_y))
+        w_id = self.xdo.get_window_at_mouse()
+        self.xdo.focus_window(w_id)
+        os.system(f'xdotool type --window {w_id} --delay [500] "{self.str_to_write}"')
 
 
 class ReOriginWindow(Action):
@@ -132,16 +136,33 @@ class ReOriginWindow(Action):
         line_str = start_line.line_str
         str_match = re.search(r"moveWindowToOriginalLocation (\d*),(\d*)", line_str)
         if str_match:
-            print("Move tested window to original location.")
             self.origin_win_x = int(str_match.group(1))
             self.origin_win_y = int(str_match.group(2))
 
     def execute(self, ctx):
         test_window = ctx.test_window
-        w_id, w_x, w_y = test_window.id, self.origin_win_x, self.origin_win_y
+        w_id = test_window.id
+        w_x, w_y = self.origin_win_x, self.origin_win_y
+
         os.system("xdotool windowmove {0} {1} {2}".format(w_id, w_x, w_y))
-        test_window = self.xdo.get_window_location(w_id)
-        # xdo.move_window(win_id, origWin_x, origWin_y)
+        self.xdo.move_mouse(w_x, w_y)
+        time.sleep(2)
+
+        new_win_location = self.xdo.get_window_location(w_id)
+        ctx.test_window.location = new_win_location
+
+        if (new_win_location.x, new_win_location.y) != (w_x, w_y):
+            log_str = "<red>Test window is not relocated at ({}, {}), with size {}x{}</red>".format(
+                w_x, w_y, test_window.size.width, test_window.size.height
+            )
+            logger.opt(colors=True).error(log_str)
+            exit(1)
+
+        log_str = "<green>Test window is relocated to ({}, {}), with size {}x{}</green>"
+        log_str = log_str.format(
+            new_win_location.x, new_win_location.y, test_window.size.width, test_window.size.height
+        )
+        logger.opt(colors=True).info(log_str)
 
 
 class ResizeWindow(Action):
@@ -153,7 +174,6 @@ class ResizeWindow(Action):
         line_str = start_line.line_str
         str_match = re.search(r"setWindowToOriginalSize (\d*),(\d*)", line_str)
         if str_match:
-            print("Set tested window to original size.")
             self.orig_win_width = int(str_match.group(1))
             self.orig_win_height = int(str_match.group(2))
 
@@ -164,20 +184,60 @@ class ResizeWindow(Action):
             self.orig_win_height,
         )
         os.system("xdotool windowsize {0} {1} {2}".format(w_id, w_width, w_height))
+        time.sleep(2)
+
+        ctx.test_window.size = self.xdo.get_window_size(w_id)
+
+        if (ctx.test_window.size.width, ctx.test_window.size.height) != (w_width, w_height):
+            log_str = "<red>Test window is not rezised corretly to ({}x{}), current size is {}x{}</red>".format(
+                w_width, w_height, ctx.test_window.size.width, ctx.test_window.size.height
+            )
+            logger.opt(colors=True).error(log_str)
+            exit(1)
+
+        log_str = "<green>Test window is rezised to {}x{}, at location ({}, {})</green>"
+        log_str = log_str.format(
+            ctx.test_window.size.width,
+            ctx.test_window.size.height,
+            ctx.test_window.location.x,
+            ctx.test_window.location.y,
+        )
+        logger.opt(colors=True).info(log_str)
 
 
-class Key(Action):
+class KeyboardWrite(Action):
     def __init__(self) -> None:
-        self.key: str
+        self.keys_str: str
+        self.keys_list: List[str]
+
+    def __charsToKeys(self, keys_buffer: List[str]) -> List[str | Key]:
+        pynput_keys: List[str | Key] = []
+        INV_KEYS_MAP = {v: k for k, v in OPTIMIZED_KEYS_MAP.items()}
+        restoreOriginalName = lambda key: INV_KEYS_MAP[key] if key in INV_KEYS_MAP else key
+        for key in keys_buffer:
+            key = restoreOriginalName(key)
+            key_obj = KEYS_MAP[key] if key in KEYS_MAP else key
+            pynput_keys.append(key_obj)
+        return pynput_keys
+
+    def __playRecordedKeys(self, keys: List[str | Key]):
+        controller = keyboard.Controller()
+        for key in keys:
+            controller.tap(key)
+
+    def _playRecordedKeys(self, keys_list: List[str]):
+        pynput_keys = self.__charsToKeys(keys_list)
+        self.__playRecordedKeys(pynput_keys)
 
     def parse(self, start_line: Line):
         line_str = start_line.line_str
-        str_match = re.search("key (.*)", line_str)
+        str_match = re.search("writeRecordedKeys (.*)", line_str)
         if str_match:
-            self.key = str_match.group(1)
+            self.keys_str = str_match.group(1)
+            self.keys_list = json.loads(self.keys_str)
 
     def execute(self, _):
-        os.system("xdotool key {0}".format(self.key))
+        self._playRecordedKeys(self.keys_list)
 
 
 class WriteMessageToLog(Action):
@@ -191,24 +251,24 @@ class WriteMessageToLog(Action):
             self.text_input = str_match.group(1)
 
     def execute(self, ctx):
-        now = dt.now()
-        timestamp_str = now.strftime("%a %m %y")
-        print("Timestamp:", timestamp_str)
         ctx.writeToLogFormatted(self.text_input)
 
 
 class ExecuteFunction(Action):
     def __init__(self) -> None:
         self.function_name: str
+        self.runtime_log: str
 
     def parse(self, start_line: Line):
-        line_str = start_line.line_str
+        line_str, line_idx = start_line.line_str, start_line.line_idx
         str_match = re.search(r"execFunction ([\w_]*$)", line_str)
         if str_match:
             self.function_name = str_match.group(1)
+            self.runtime_log = "Line{:0>3d}; <yellow>Execute function {}</yellow>"
+            self.runtime_log = self.runtime_log.format(line_idx, self.function_name)
 
     def execute(self, ctx):
-        print("Execute function {}".format(self.function_name))
+        logger.opt(ansi=True).info(self.runtime_log.strip())
         ctx.executeFunction(self.function_name)
 
 
@@ -216,35 +276,46 @@ class RepeatFunction(Action):
     def __init__(self) -> None:
         self.function_name: str
         self.num_repeats: int
+        self.runtime_log: str
 
     def parse(self, start_line: Line):
-        line_str = start_line.line_str
+        line_str, line_idx = start_line.line_str, start_line.line_idx
         str_match = re.search(r'repeatFunction ([^"]*),(\d*)', line_str)
         if str_match:
             self.function_name = str_match.group(1)
             self.num_repeats = int(str_match.group(2))
+            self.runtime_log = "Line{:0>3d}; <green>Repeat function {} {} times</green>"
+            self.runtime_log = self.runtime_log.format(
+                line_idx, self.function_name, self.num_repeats
+            )
 
     def execute(self, ctx):
-        print("Execute function {} {} times".format(self.function_name, self.num_repeats))
-        for _ in range(self.num_repeats):
+        logger.opt(ansi=True).info(self.runtime_log.strip())
+
+        for iteration in range(self.num_repeats):
+            ctx.setIteration(1 + iteration)  # 1-based
             ctx.executeFunction(self.function_name)
+        ctx.setIteration(1)
 
 
 class Comment(Action):
     def __init__(self) -> None:
         self.comment: str
+        self.runtime_log: str
 
     def parse(self, start_line: Line):
         line_str, line_idx = start_line.line_str, start_line.line_idx
-        str_match = re.search(r"#(.*)", line_str)
+        str_match = re.search(r"#\s*(.*)", line_str)
         if str_match:
-            line_str = "Line{:0>3d}; {}".format(line_idx, line_str)
             comment = str_match.group(1)
             self.comment = comment
+            self.runtime_log = "Line{:0>3d}; {}".format(line_idx, comment)
 
     def execute(self, ctx):
+        logger.opt(ansi=True).info(self.runtime_log.strip())
         if self.comment != "":
             ctx.pushToDesciptionStack(self.comment)
+
 
 class DragMouse(Action):
     def __init__(self) -> None:
@@ -259,7 +330,7 @@ class DragMouse(Action):
             self.end_pos = (int(str_match.group(3)), int(str_match.group(4)))
 
     def execute(self, ctx):
-        print("Drag mouse from {} to {}".format(self.start_pos, self.end_pos))
+        logger.info("Drag mouse from {} to {}".format(self.start_pos, self.end_pos))
 
         DURATION, STEPS = 5, 500
         WAIT_TIME = DURATION / STEPS
@@ -281,7 +352,7 @@ class DragMouse(Action):
             x = x1 + int(i * (x2 - x1) / STEPS)
             y = y1 + int(i * (y2 - y1) / STEPS)
 
-            print("Move mouse to {}, {}".format(x, y))
+            logger.info("Move mouse to {}, {}".format(x, y))
 
             self.xdo.move_mouse(w_x + int(x), w_y + int(y))
             self.xdo.focus_window(w_id)

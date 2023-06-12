@@ -1,0 +1,114 @@
+# Original window properties
+setWindowToOriginalSize 590,590
+
+# Original window properties
+setWindowToOriginalSize 590,590
+
+# Click on
+click 545,28
+sleep 2
+
+# Click on
+click 333,76
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["k", "e", "y"]
+sleep 2
+
+# Click on
+click 310,157
+sleep 2
+
+# Click on
+click 162,127
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["sh", "H", "e", "l", "l", "o", "sp", "t", "h", "i", "s", "sp", "i", "s", "sp", "t", "e", "s", "t", "sp", "a", "n", "d", "sp", "k", "e", "y", "sp", "b", "o", "a", "r", "d", "sp", "i", "s", "sp", "r", "e", "c", "o", "r", "d", "e", "r", "bs", "d", "sp", "en", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "en", "sh", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "en", "sh", "{", "}", ":", "\"", "L", ">", "<", "?", "up", "up", "up", "en", "t", "e", "s", "t", "sp", "a", "r", "r", "o", "w", "sp", "dn", "up", "up", "up", "up", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "en", "up", "f", "r", "o", "m", "sp", "a", "r", "r", "o", "w", "s", "dn", "dn", "dn", "dn", "en", "t", "e", "s", "t", "sp", "d", "e", "l", "e", "t", "e", "up", "bs", "bs", "bs", "bs", "bs", "bs", "bs", "bs", "bs", "bs", "bs", "dn", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "lf", "bs", "dn", "dn", "rt", "rt", "rt", "rt", "rt", "rt", "rt", "rt", "rt", "rt", "rt"]
+sleep 2
+
+# Click on
+click 452,71
+sleep 2
+
+# Click on
+click 497,130
+sleep 2
+
+# Click on
+click 487,206
+sleep 2
+
+# Click on
+click 491,276
+sleep 2
+
+# Click on
+click 529,41
+sleep 2
+
+# Click on
+click 494,359
+sleep 2
+
+# Click on
+click 170,61
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["f", "i", "l", "e"]
+sleep 2
+
+# Click on
+click 401,55
+sleep 2
+
+# Click on
+click 308,285
+sleep 2
+
+# Click on
+click 529,52
+sleep 2
+
+# Click on
+click 284,515
+sleep 2
+
+# Click on
+click 38,26
+sleep 2
+
+# Click on
+click 540,27
+sleep 2
+
+# Click on
+click 328,70
+sleep 2
+
+# Write recorded keys.
+writeRecordedKeys ["bs", "bs", "bs", "k", "e", "y", "o", "bs", "b", "o", "a", "r", "d"]
+sleep 2
+
+# Click on
+click 294,255
+sleep 2
+
+# Click on
+click 430,299
+sleep 2
+
+# Click on
+click 530,54
+sleep 2
+
+# Click on
+click 319,520
+sleep 2
+
+# Click on
+click 319,441
+sleep 2
+

@@ -1,20 +1,23 @@
 from enum import Enum, auto
 from typing import Tuple, Type
 
-from .actions import (Action,
-                      ActionType,
-                      Click,
-                      Comment, DragMouse,
-                      ExecuteFunction,
-                      Key,
-                      ReOriginWindow,
-                      RepeatFunction,
-                      ResizeWindow,
-                      ScrollDown,
-                      ScrollUp,
-                      Sleep,
-                      Write,
-                      WriteMessageToLog,)
+from .actions import (
+    Action,
+    ActionType,
+    Click,
+    Comment,
+    DragMouse,
+    ExecuteFunction,
+    ReOriginWindow,
+    RepeatFunction,
+    ResizeWindow,
+    KeyboardWrite,
+    ScrollDown,
+    ScrollUp,
+    Sleep,
+    Write,
+    WriteMessageToLog,
+)
 from .helpers import Line, TestScript
 
 
@@ -26,13 +29,13 @@ class LineType(str, Enum):
     INVALID = auto()
 
 
-class TestFunction:
+class ScriptFunction:
     def __init__(self, name: str, actions: list[Action]) -> None:
         self.name = name
         self.actions = actions
 
 
-class TestParser:
+class Parser:
     def __init__(self, test_script: TestScript):
         self._test_script = test_script
         self._lines = self._test_script.lines
@@ -42,6 +45,18 @@ class TestParser:
 
         self._parse()
         self.window_resized: bool = self._checkWindowResized()
+        self.window_relocated: bool = self._checkWindowReLocated()
+
+    def _checkWindowReLocated(self) -> bool:
+        for action in self.main_actions:
+            if isinstance(action, ReOriginWindow):
+                return True
+
+        for function in self.functions.values():
+            for action in function:
+                if isinstance(action, ReOriginWindow):
+                    return True
+        return False
 
     def _checkWindowResized(self) -> bool:
         for action in self.main_actions:
@@ -100,7 +115,7 @@ class TestParser:
 
         return LineType.INVALID, stripped_str
 
-    def _parseFunction(self, start_line: Line) -> Tuple[TestFunction, Line]:
+    def _parseFunction(self, start_line: Line) -> Tuple[ScriptFunction, Line]:
         line = start_line
         function_name = line.line_str.split()[1]
         function_actions: list[Action] = []
@@ -119,7 +134,7 @@ class TestParser:
 
             else:
                 line = self._lines[line.line_idx + 1]
-        return TestFunction(function_name, function_actions), line
+        return ScriptFunction(function_name, function_actions), line
 
     def _parseAction(self, action_type: ActionType, line: Line) -> Tuple[Action, Line]:
         parsing_map: dict[ActionType, Type[Action]] = {
@@ -130,12 +145,12 @@ class TestParser:
             ActionType.SLEEP: Sleep,
             ActionType.MV_ORIGINAL_LOCATION: ReOriginWindow,
             ActionType.RESIZE_ORIGINAL: ResizeWindow,
-            ActionType.KEY: Key,
+            ActionType.KEYBOARD_WRITE: KeyboardWrite,
             ActionType.EXECUTE_FUNCTION: ExecuteFunction,
             ActionType.REPEAT_FUNCTION: RepeatFunction,
             ActionType.LOG_MESSAGE: WriteMessageToLog,
             ActionType.COMMENT: Comment,
-            ActionType.DRAG_MOUSE: DragMouse
+            ActionType.DRAG_MOUSE: DragMouse,
         }
         parsed_action = parsing_map[action_type]()
         parsed_action.parse(line)

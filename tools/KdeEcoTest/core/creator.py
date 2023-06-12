@@ -1,26 +1,34 @@
+import json
 import os
 import signal
 import time
+import subprocess
 
 from pynput import keyboard, mouse
 from pynput.keyboard import Key
 from xdo import Xdo
 
+from .constants import KEYS_MAP, OPTIMIZED_KEYS_MAP
+
 window_defined = False
 writeMousePosToFile = False
+writeKeyboardKeysToFile = False
 writeMouseOnce = False
+win_id = 0
+keys_buffer = []
 
 clickForDrag = False
 dragStartRecorded = False
 dragEndRecorded = False
 
 
-
 outputFilename = "testscript.txt"
+
 
 def defineWindow(test_scirpt):
     ## get application origin coordinates
     xdo = Xdo()
+    global win_id
     win_id = xdo.select_window_with_click()
 
     global win_location
@@ -37,8 +45,7 @@ def defineWindow(test_scirpt):
     outputFilename = test_scirpt
     file1 = open(outputFilename, "a")
     file1.write("# Original window properties\n")
-    # I comment moveWindowToOriginalLocation at the moment because I am not sure it is useful.
-    # file1.write("moveWindowToOriginalLocation {0},{1}\n".format(win_location.x,win_location.y))
+    file1.write("moveWindowToOriginalLocation {0},{1}\n".format(win_location.x,win_location.y))
     file1.write("setWindowToOriginalSize {0},{1}\n\n".format(win_size.width, win_size.height))
     file1.close()
 
@@ -54,6 +61,23 @@ def addClick():
         writeMousePosToFile = True
 
 
+def addKeyboardKeys():
+    if window_defined == False:
+        print("To add keyboard keys, first define which application is tested.")
+        print("Enter the dw command (defined window) and click on the application.")
+    else:
+        print("Keyboard keys are now added to the end of the KdeEcoTest output file.")
+
+        global writeKeyboardKeysToFile
+        writeKeyboardKeysToFile = True
+
+
+def stopKeyboardKeys():
+    print("Keyboard keys are not added anymore to the output file.")
+    global writeKeyboardKeysToFile
+    writeKeyboardKeysToFile = False
+
+
 def stopClick():
     print("Mouse clicks are not added anymore to the output file.")
     global writeMousePosToFile
@@ -61,6 +85,7 @@ def stopClick():
 
 
 def scrollup():
+    saveRecordedKeys()
     file1 = open(outputFilename, "a")
     file1.write("scrollup\n")
     file1.write("sleep 2\n")
@@ -69,6 +94,7 @@ def scrollup():
 
 
 def scrolldown():
+    saveRecordedKeys()
     file1 = open(outputFilename, "a")
     file1.write("scrolldown\n")
     file1.write("sleep 2\n")
@@ -86,7 +112,6 @@ def writeToScreen():
     file1.write("sleep 2\n")
     file1.write("\n")
     file1.close()
-
 
 
 def writeMessageToLog():
@@ -111,38 +136,87 @@ args = parser.parse_args()
 """
 
 
+def exitApp():
+    print("Program aborted.")
+    os.kill(os.getpid(), signal.SIGTERM)
+
+
+def saveRecordedKeys():
+    global keys_buffer
+    if len(keys_buffer) == 0:
+        return
+    file1 = open(outputFilename, "a")
+    file1.write("# Write recorded keys.\n")
+    file1.write("writeRecordedKeys ")
+    optmized_keys_buffer = []
+    for key in keys_buffer:
+        if key in OPTIMIZED_KEYS_MAP:
+            optmized_keys_buffer.append(OPTIMIZED_KEYS_MAP[key])
+        else:
+            optmized_keys_buffer.append(key)
+    keys_buffer = []
+    file1.write(json.dumps(optmized_keys_buffer))
+    file1.write("\nsleep 2\n")
+    file1.write("\n")
+    file1.close()
+
+
+def windowAlive(window_id):
+    try:
+        subprocess.check_output(["xdotool", "getwindowname", f"{window_id}"], stderr=subprocess.DEVNULL)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
 def on_press(key):
     try:
-        # print('alphanumeric key {0} pressed'.format(key))
-        if key == Key.space:
-            global writeMousePosToFile
-            if writeMousePosToFile == True:
-                writeMousePosToFile = False
-                print("The testing program is on pause.")
-            else:
-                writeMousePosToFile = True
-                print("The testing program is running.")
-        if key == Key.esc:
-            print("Program aborted.")
-            os.kill(os.getpid(), signal.SIGTERM)
+        if win_id and windowAlive(win_id) == False:
+            exitApp()
 
-    except AttributeError:
+        xdo = Xdo()
+        curr_window = xdo.get_window_at_mouse()
+        if curr_window != win_id:
+            return
+
+        global writeKeyboardKeysToFile
+        if key == Key.esc:
+            if writeKeyboardKeysToFile:
+                stopKeyboardKeys()
+                saveRecordedKeys()
+            else:
+                exitApp()
+
+        else:
+            if hasattr(key, "char"):
+                keys_buffer.append(key.char)
+
+            elif key._name_ in KEYS_MAP:
+                keys_buffer.append(key._name_)
+
+            else:
+                return
+
+    except AttributeError as e:
+        print(e)
         print("special key {0} pressed".format(key))
 
 
 def on_click(x, y, button, pressed):
+    saveRecordedKeys()
     global writeMousePosToFile
     global writeMouseOnce
+    global win_id
+
+    if win_id and windowAlive(win_id) == False:
+        exitApp()
+
     global clickForDrag
     global dragStartRecorded
     global dragEndRecorded
     global windows_x
     global windows_y
 
-    print("A click is detected")
-    print("for write ", writeMousePosToFile)
-    print("for drag: ", clickForDrag)
-    print("-------------------------")
     if writeMousePosToFile or clickForDrag:
         if button == mouse.Button.left:
             if pressed:
@@ -153,7 +227,7 @@ def on_click(x, y, button, pressed):
                 windows_x = x - win_location.x
                 windows_y = y - win_location.y
 
-                print(" a click here") 
+                print(" a click here")
                 print("for drag: ", clickForDrag)
 
                 if clickForDrag:
@@ -161,11 +235,10 @@ def on_click(x, y, button, pressed):
                     if dragStartRecorded == False:
                         dragStartRecorded = True
                         print("Drag start recorded")
-                        
+
                     elif dragEndRecorded == False:
                         dragEndRecorded = True
                         print("Drag end recorded")
-
 
                 else:
                     print("mouse click position added to the file")
@@ -186,6 +259,7 @@ def on_click(x, y, button, pressed):
                 else:
                     # Using asynchronous is tricky, I am wondering how we could use the while True: loop to get its Enter command print. Meanwhile I am writting this fudge:
                     print("Enter Your command:\n")
+
 
 # select start point and end point with mouse clicks and store them in a file
 def addDrag():
@@ -231,7 +305,6 @@ def addDrag():
         print("Enter Your command:\n")
 
 
-
 def createTestScript(test_script):
     mouse_listener = mouse.Listener(on_click=on_click)
     mouse_listener.start()
@@ -250,6 +323,8 @@ def createTestScript(test_script):
     print("asu : after scroll up ")
     print("asd : after scroll down")
     print("drg: add drag.")
+    print("ak: add keyboard keys.")
+    print("sk: stop add keyboard keys.")
     print("\n")
 
     print("To begin with, click on the application you want the script to be written for.")
@@ -271,6 +346,10 @@ def createTestScript(test_script):
             addClick()
         elif commandStr == "sc":
             stopClick()
+        elif commandStr == "ak":
+            addKeyboardKeys()
+        elif commandStr == "sk":
+            stopKeyboardKeys()
         elif commandStr == "asc":
             writeMouseOnce = True
             addClick()

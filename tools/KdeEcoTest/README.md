@@ -12,13 +12,12 @@ Contents
 
 ### Why?
 A Standard Usage Scenario reflects the typical functions of an application and is central to measuring the energy consumption of software.
-`KdeEcoTestCreator` helps to create a script which simulates the task of a normal user do in order to create standard usage scenario.
-`KdeEcoTest` runs the script created by KdeEcoTestCreator to automate the scenario and helps to measure energy consumption of that application.
+`KdeEcoTest` helps to create a script which simulates the task of a normal user do in order to create standard usage scenario and also run those scirpts to automate the scenario and helps to measure energy consumption of that application.
 
-KdeEcoTest and KdeEcoTestCreator is a cross-platform and CLI based python tool which is built using xdotool.
+KdeEcoTest is a cross-platform and CLI based python tool which is built using xdotool.
 
 ### Installation
-> In order to run KdeEcoTestCreator and KdeEcoTest , These modules are required to be installed on your device.
+> In order to run KdeEcoTest , These modules are required to be installed on your device.
 
 ```bash
 $ pip3 install python-libxdo
@@ -33,25 +32,32 @@ $ sudo apt install python3-tk
 # arch
 $ sudo pacman -S xdotool
 $ sudo pacman -S tk
+
+# <your distro>
+# install xdotool
+# install tk
 ```
 
 ### Usage
 
+#### Clone & Setup the virtual environment
+
 ```bash
 $ git clone https://invent.kde.org/teams/eco/feep.git
 $ cd feep/tools/KdeEcoTest/
+$ pip install pipenv
+$ pipenv install
+$ pipenv shell
 ```
 
-#### KdeEcoTestCreator usage
+#### Create new script 
 
-- To start KdeEcoTestCreator :
 ```bash
-$ python3 KdeEcoTestCreator.py --outputFilename KdeEcoTestScript.txt
+$ python3 KdeEcoTest.py create --script KdeEcoTestScript.txt
 ```
-- To pause the test : Press Space
 - To abort the program : Press Esc
+- A round mouse pointer appears, Click on the window you want to test.Now, You can use these options provided by KdeEcoTest to simulate actions and create a test script.
 
-- A round mouse pointer appears, Click on the window you want to test.Now, You can use these options provided by KdeEcoTestCreator to simulate actions and create a test script.
 ```shell
 Commands:
 dw: define window.
@@ -62,13 +68,12 @@ wtl: write test timestamp to log.
 wmtl: write message to log.
 ```
 
-#### KdeEcoTest usage
-KdeEcoTest automates the actions stored in the script created by KdeEcoTestCreator.
+#### Run a script
+KdeEcoTest automates the actions stored in the created scripts created.
 - To run KdeEcoTest script :
 ```bash
-python3 KdeEcoTest.py --inputFilename KdeEcoTestScript.txt
+$ python3 KdeEcoTest.py run --script KdeEcoTestScript.txt
 ```
-- To pause the test : Press Space
 - To abort the program : Press Esc
 
 ### Want to contribute?
@@ -77,8 +82,6 @@ python3 KdeEcoTest.py --inputFilename KdeEcoTestScript.txt
 Contribute in the following ways:
 
 #### To-Do's
-- Negative value problem : There's a problem with negative values when script is created on another computer and tested on a different computer.
-
 - Modal window : KdeEcoTest doesn't record the clicks on modal window.We need to find a way to add it.
 
 - Keyboard Activity : Curently KdeEcoTest only capture mouse activity with typing text as the only keyboard activity. We want to record keyboard controls too,Find a way to add keyboard activity.
