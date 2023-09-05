@@ -25,13 +25,18 @@ $ pip3 install pynput
 ```
 
 ```bash
-# debian/ubuntu
+# Debian/Ubuntu
 $ sudo apt-get install xdotool
 $ sudo apt install python3-tk
 
-# arch
+# Arch
 $ sudo pacman -S xdotool
 $ sudo pacman -S tk
+
+# Fedora
+$ sudo dnf install xdotool
+$ sudo dnf install tk
+$ sudo dnf install python3-tkinter
 
 # <your distro>
 # install xdotool
