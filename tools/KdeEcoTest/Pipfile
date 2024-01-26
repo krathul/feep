@@ -4,14 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pynput = "==1.7.*"
-python-libxdo = "*"
-typer = {extras = ["all"], version = "*"}
+pynput = "*"
+dbus-python = "*"
+mouse = "*"
 loguru = "*"
+typer = "*"
 
 [dev-packages]
-black = "*"
-isort = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.12"

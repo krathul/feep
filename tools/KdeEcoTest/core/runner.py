@@ -6,9 +6,9 @@ from pathlib import Path
 from loguru import logger
 from pynput import keyboard
 from pynput.keyboard import Key
-from xdo import Xdo
 
 from core.actions import Action, Comment
+from core.Handlers import WindowHandler, InputHandler
 
 from .helpers import TestScript, Window
 from .parser import Parser
@@ -70,8 +70,6 @@ class Runner:
         self.test_script = test_script
         self.is_running: bool = True
         self.context: Context = Context(test_script, log_file)
-
-        self.xdo = Xdo()
         self.key_listener = keyboard.Listener(on_press=self._onPress)
 
     def run(self):
@@ -94,9 +92,9 @@ class Runner:
         self.context.writeToLogFormatted("", status="stopTestrun")
 
     def _defineWindow(self) -> Window:
-        win_id = self.xdo.select_window_with_click()
-        win_location = self.xdo.get_window_location(win_id)
-        win_size = self.xdo.get_window_size(win_id)
+        win_id = WindowHandler.SelectWindow()
+        win_location = WindowHandler.GetwindowLocation()
+        win_size = WindowHandler.GetWindowGeometry()
         self.window_defined = True
 
         log_str = "<green>Window defined with id: {}, at ({}, {}), with size {}x{}</green>"

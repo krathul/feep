@@ -4,54 +4,24 @@ import json
 import os
 import re
 import time
-from abc import ABC, abstractmethod
-from datetime import datetime as dt
-from enum import Enum
+import subprocess
+
 from typing import TYPE_CHECKING, List
-from xdo import window_location
 
 from loguru import logger
 from pynput import keyboard
 from pynput.keyboard import Key
-from xdo import Xdo
+from pynput.mouse import Button
+
+import dbus
 
 from .constants import OPTIMIZED_KEYS_MAP, KEYS_MAP
+from ._actions import Action
 
 if TYPE_CHECKING:
     from .helpers import Line
-    from .runner import Context
 
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
-
-
-class ActionType(str, Enum):
-    CLICK = "click"
-    WRITE_TO_SCREEN = "write"
-    SCROLL_UP = "scrollup"
-    SCROLL_DOWN = "scrolldown"
-    SLEEP = "sleep"
-    MV_ORIGINAL_LOCATION = "moveWindowToOriginalLocation"
-    RESIZE_ORIGINAL = "setWindowToOriginalSize"
-    KEY = "key"
-    LOG_MESSAGE = "writeMessageToLog"
-    EXECUTE_FUNCTION = "execFunction"
-    REPEAT_FUNCTION = "repeatFunction"
-    DRAG_MOUSE = "dragMouse"
-    KEYBOARD_WRITE = "writeRecordedKeys"
-    COMMENT = "#"  # not an action, but it is used to parse comments as comments creates logs
-
-
-class Action(ABC):
-    xdo = Xdo()
-
-    @abstractmethod
-    def parse(self, start_line: Line):
-        pass
-
-    @abstractmethod
-    def execute(self, ctx: Context):
-        pass
-
 
 class Click(Action):
     def __init__(self) -> None:
@@ -68,10 +38,9 @@ class Click(Action):
     def execute(self, ctx):
         test_window = ctx.test_window
         w_id, w_x, w_y = test_window.id, test_window.location.x, test_window.location.y
-        self.xdo.move_mouse(w_x + int(self.x), w_y + int(self.y))
-        w_id = self.xdo.get_window_at_mouse()
-        self.xdo.focus_window(w_id)
-        self.xdo.click_window(w_id, 1)
+        subprocess.run(["kdotool", "windowactivate", w_id], capture_output = True)
+        # Action.mouse.position = (w_x + int(self.x), w_y + int(self.y))
+        # Action.mouse.click(Button.left, 1)
 
 
 class ScrollUp(Action):
@@ -79,7 +48,8 @@ class ScrollUp(Action):
         return
 
     def execute(self, _):
-        os.system("xdotool click 4")
+        pass
+        #Action.mouse.scroll(0,-4)
 
 
 class ScrollDown(Action):
@@ -87,7 +57,8 @@ class ScrollDown(Action):
         return
 
     def execute(self, _):
-        os.system("xdotool click 5")
+        pass
+        # Action.mouse.scroll(0,4)
 
 
 class Sleep(Action):
@@ -121,10 +92,10 @@ class Write(Action):
     def execute(self, ctx):
         test_window = ctx.test_window
         w_id, w_x, w_y = test_window.id, test_window.location.x, test_window.location.y
-        self.xdo.move_mouse(w_x + int(self.str_x), w_y + int(self.str_y))
-        w_id = self.xdo.get_window_at_mouse()
-        self.xdo.focus_window(w_id)
-        os.system(f'xdotool type --window {w_id} --delay [500] "{self.str_to_write}"')
+        # Action.mouse.position = (w_x + int(self.str_x), w_y + int(self.str_y))
+        # w_id = self.xdo.get_window_at_mouse()
+        # self.xdo.focus_window(w_id)
+        # os.system(f'xdotool type --window {w_id} --delay [500] "{self.str_to_write}"')
 
 
 class ReOriginWindow(Action):
@@ -144,11 +115,10 @@ class ReOriginWindow(Action):
         w_id = test_window.id
         w_x, w_y = self.origin_win_x, self.origin_win_y
 
-        os.system("xdotool windowmove {0} {1} {2}".format(w_id, w_x, w_y))
-        self.xdo.move_mouse(w_x, w_y)
+        Action.WindowHandler.WindowMove(w_id, w_x, w_y)
         time.sleep(2)
 
-        new_win_location = self.xdo.get_window_location(w_id)
+        new_win_location = Action.WindowHandler.GetwindowLocation(w_id)
         ctx.test_window.location = new_win_location
 
         if (new_win_location.x, new_win_location.y) != (w_x, w_y):
@@ -183,10 +153,10 @@ class ResizeWindow(Action):
             self.orig_win_width,
             self.orig_win_height,
         )
-        os.system("xdotool windowsize {0} {1} {2}".format(w_id, w_width, w_height))
+        Action.WindowHandler.ResizeWindow(w_id, w_width, w_height)
         time.sleep(2)
 
-        ctx.test_window.size = self.xdo.get_window_size(w_id)
+        ctx.test_window.size = Action.WindowHandler.GetWindowGeometry(w_id)
 
         if (ctx.test_window.size.width, ctx.test_window.size.height) != (w_width, w_height):
             log_str = "<red>Test window is not rezised corretly to ({}x{}), current size is {}x{}</red>".format(
@@ -340,22 +310,22 @@ class DragMouse(Action):
 
         test_window = ctx.test_window
         w_x, w_y = test_window.location.x, test_window.location.y
-        w_id = self.xdo.get_window_at_mouse()
+        # w_id = self.xdo.get_window_at_mouse()
 
-        # Move mouse to start position
-        self.xdo.move_mouse(w_x + int(x1), w_y + int(y1))
-        self.xdo.focus_window(w_id)
-        self.xdo.mouse_down(w_id, 1)
+        # # Move mouse to start position
+        # self.xdo.move_mouse(w_x + int(x1), w_y + int(y1))
+        # self.xdo.focus_window(w_id)
+        # self.xdo.mouse_down(w_id, 1)
 
-        # Move mouse to end position while holding down the mouse button
-        for i in range(1, STEPS + 1):
-            x = x1 + int(i * (x2 - x1) / STEPS)
-            y = y1 + int(i * (y2 - y1) / STEPS)
+        # # Move mouse to end position while holding down the mouse button
+        # for i in range(1, STEPS + 1):
+        #     x = x1 + int(i * (x2 - x1) / STEPS)
+        #     y = y1 + int(i * (y2 - y1) / STEPS)
 
-            logger.info("Move mouse to {}, {}".format(x, y))
+        #     logger.info("Move mouse to {}, {}".format(x, y))
 
-            self.xdo.move_mouse(w_x + int(x), w_y + int(y))
-            self.xdo.focus_window(w_id)
-            time.sleep(WAIT_TIME)
+        #     self.xdo.move_mouse(w_x + int(x), w_y + int(y))
+        #     self.xdo.focus_window(w_id)
+        #     time.sleep(WAIT_TIME)
 
-        self.xdo.mouse_up(w_id, 1)
+        # self.xdo.mouse_up(w_id, 1)

@@ -19,34 +19,6 @@ A Standard Usage Scenario reflects the typical functions of an application and i
 
 `KdeEcoTest` is a cross-platform and CLI based Python tool which is built using `xdotool`.
 
-### Installation
-
-In order to run `KdeEcoTest`, these modules must be installed on your device.
-
-```bash
-$ pip3 install python-libxdo
-$ pip3 install pynput
-```
-
-```bash
-# Debian/Ubuntu
-$ sudo apt-get install xdotool
-$ sudo apt install python3-tk
-
-# Arch
-$ sudo pacman -S xdotool
-$ sudo pacman -S tk
-
-# Fedora
-$ sudo dnf install xdotool
-$ sudo dnf install tk
-$ sudo dnf install python3-tkinter
-
-# <your distro>
-# install xdotool
-# install tk
-```
-
 ### Usage
 
 #### Clone & Setup the virtual environment
@@ -54,6 +26,12 @@ $ sudo dnf install python3-tkinter
 ```bash
 $ git clone https://invent.kde.org/teams/eco/feep.git
 $ cd feep/tools/KdeEcoTest/
+
+#Do these steps only if you are on KDE plasma
+$ mkdir -p externals/kdotool
+$ git clone https://github.com/jinliu/kdotool.git externals/kdotool
+$ make
+
 $ pip install pipenv
 $ pipenv install
 $ pipenv shell
@@ -62,7 +40,7 @@ $ pipenv shell
 #### Create new script 
 
 ```bash
-$ python3 KdeEcoTest.py create --script KdeEcoTestScript.txt
+$ python3 KdeEcoTest.py create <SCRIPT_NAME>
 ```
 - To abort the program : Press Esc
 - A round mouse pointer appears. Click on the window you want to test. Now, you can use these options provided by `KdeEcoTest` to simulate actions and create a test script.
@@ -83,7 +61,7 @@ wmtl: write message to log.
 
 - To run `KdeEcoTest` script:
 ```bash
-$ python3 KdeEcoTest.py run --script KdeEcoTestScript.txt
+$ python3 KdeEcoTest.py run <SCRIPT_NAME>
 ```
 - To abort the program: Press Esc
 

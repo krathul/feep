@@ -3,13 +3,15 @@ import os
 import signal
 import time
 import subprocess
+import dbus
 
 from pynput import keyboard, mouse
 from pynput.keyboard import Key
-from xdo import Xdo
 
 from .constants import KEYS_MAP, OPTIMIZED_KEYS_MAP
 
+windows_x = 0
+windows_y = 0
 window_defined = False
 writeMousePosToFile = False
 writeKeyboardKeysToFile = False
@@ -26,10 +28,13 @@ outputFilename = "testscript.txt"
 
 
 def defineWindow(test_scirpt):
-    ## get application origin coordinates
-    xdo = Xdo()
     global win_id
-    win_id = xdo.select_window_with_click()
+
+    # get application origin coordinates
+    KWin_bus = dbus.SessionBus()
+    KWin_proxy = KWin_bus.get_object('org.kde.KWin', '/KWin')
+    win_id = KWin_proxy.queryWindowInfo(dbus_interface = 'org.kde.KWin')['uuid']
+    #print(KWin_proxy.getWindowInfo(win_id, dbus_interface = 'org.kde.KWin')['uuid'])
 
     global win_location
     win_location = xdo.get_window_location(win_id)
@@ -103,6 +108,8 @@ def scrolldown():
 
 
 def writeToScreen():
+    global windows_x
+    global windows_y
     print("Write to the screen, enter you text.")
     textInput = input()
     print("Text entered :" + textInput)
@@ -220,7 +227,7 @@ def on_click(x, y, button, pressed):
     if writeMousePosToFile or clickForDrag:
         if button == mouse.Button.left:
             if pressed:
-                if (x > win_location.x + win_size.width) or (y > win_location.y + win_size.height):
+                if (x > win_location.x + win_size.width) or (x < win_location.x) or (y > win_location.y + win_size.height) or (y < win_location.y + win_size.height):
                     print("Click outside window, do not record click")
                     return
 
