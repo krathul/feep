@@ -25,3 +25,8 @@ backend = set_handlers(__name__)
 WindowHandler = backend.WindowActionHandler
 InputHandler = backend.InputActionHandler
 del backend
+
+__all__ = [
+     WindowHandler,
+     InputHandler
+]
