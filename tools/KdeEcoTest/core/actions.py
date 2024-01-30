@@ -1,19 +1,9 @@
 from __future__ import annotations
-
 import json
-import os
 import re
 import time
-import subprocess
-
 from typing import TYPE_CHECKING, List
-
 from loguru import logger
-from pynput import keyboard
-from pynput.keyboard import Key
-from pynput.mouse import Button
-
-import dbus
 
 from .constants import OPTIMIZED_KEYS_MAP, KEYS_MAP
 from ._actions import Action
@@ -40,7 +30,7 @@ class Click(Action):
         w_id, w_x, w_y = test_window.id, test_window.location.x, test_window.location.y
         self.window_handler.WindowFocus(w_id)
         self.input_handler.mouse.position = (w_x + int(self.x), w_y + int(self.y))
-        self.input_handler.mouse.click(Button.left, 1)
+        self.input_handler.mouse.click(self.input_handler.mouse_buttons.left, 1)
 
 
 class ScrollUp(Action):
@@ -177,8 +167,8 @@ class KeyboardWrite(Action):
         self.keys_str: str
         self.keys_list: List[str]
 
-    def _charsToKeys(self, keys_buffer: List[str]) -> List[str | Key]:
-        pynput_keys: List[str | Key] = []
+    def _charsToKeys(self, keys_buffer):
+        pynput_keys = []
         INV_KEYS_MAP = {v: k for k, v in OPTIMIZED_KEYS_MAP.items()}
         restoreOriginalName = lambda key: INV_KEYS_MAP[key] if key in INV_KEYS_MAP else key
         for key in keys_buffer:

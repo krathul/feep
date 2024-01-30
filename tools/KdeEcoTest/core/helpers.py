@@ -1,8 +1,6 @@
 from pathlib import Path
 from loguru import logger
 
-from xdo import window_location, window_size
-
 
 class Line:
     def __init__(self, idx, string) -> None:
@@ -24,5 +22,5 @@ class TestScript:
 class Window:
     def __init__(self, id, location, size):
         self.id: int = id
-        self.location: window_location = location
-        self.size: window_size = size
+        self.location = location
+        self.size = size
