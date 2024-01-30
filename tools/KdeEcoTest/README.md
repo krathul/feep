@@ -16,27 +16,27 @@ A Standard Usage Scenario reflects the typical functions of an application and i
 
 ### Testing and Usage
 
-#### Clone & Setup the virtual environment
+#### Setup
 
 ```bash
 $ git clone -b dev https://invent.kde.org/krathul/feep.git
 $ cd feep/tools/KdeEcoTest/
+$ pip install pipenv
 
 #Do these steps only if you are on KDE plasma
 $ mkdir -p externals/kdotool
 $ git clone -b dev https://invent.kde.org/krathul/kdotool.git externals/kdotool
 $ make
 
-#For running on X11 based systems also install python-libxdo and xdotools
+#Create environment and install dependencies
+$ pipenv install
+#Activate the environment
+$ pipenv shell
+
+#For running on X11 based systems, you need to additionally install python-libxdo and xdotools
 $ pipenv install python-libxdo
 #For installing xdotool check your package manager for info
 
-$ pip install pipenv
-$ pipenv install
-$ pipenv install git+https://invent.kde.org/krathul/pynput.git
-
-#Activate the environment
-$ pipenv shell
 ```
 
 KdeEcotest uses libevdev for reading and simulating events from input devices, and requires permission to read and write from /dev/input, /dev/uinput, /dev/console
