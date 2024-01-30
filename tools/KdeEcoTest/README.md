@@ -14,7 +14,7 @@ A Standard Usage Scenario reflects the typical functions of an application and i
 
 `KdeEcoTest` is a cross-platform CLI based Python tool.
 
-### Usage
+### Testing and Usage
 
 #### Clone & Setup the virtual environment
 
