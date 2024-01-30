@@ -17,7 +17,7 @@ A Standard Usage Scenario reflects the typical functions of an application and i
 
 `KdeEcoTest` helps to create a script which simulates the activities of a normal user in order to create a Standard Usage Scenario. `KdeEcoTest` also runs those scripts to automate emulation of user behavior in order to measure energy consumption of an application while in use.
 
-`KdeEcoTest` is a cross-platform and CLI based Python tool which is built using `xdotool`.
+`KdeEcoTest` is a cross-platform CLI based Python tool.
 
 ### Usage
 
@@ -29,12 +29,34 @@ $ cd feep/tools/KdeEcoTest/
 
 #Do these steps only if you are on KDE plasma
 $ mkdir -p externals/kdotool
-$ git clone https://github.com/jinliu/kdotool.git externals/kdotool
+$ git clone -b dev https://invent.kde.org/krathul/kdotool.git externals/kdotool
 $ make
 
 $ pip install pipenv
 $ pipenv install
+$ pipenv install git+https://invent.kde.org/krathul/pynput.git
+
+#For running on X11 based systems also install python-libxdo and xdotools
+$ pipenv install python-libxdo
+#For installing xdotools check your package manager for info
+
+#Activate the environment
 $ pipenv shell
+```
+
+KdeEcotest uses libevdev for reading and simulating events from input devices, and requires permission to read and write from /dev/input, /dev/uinput, /dev/console
+This can be done by other modifying the permissions to the file or adding the user to the required groups
+
+To grant permissions temporarily (Per login session)
+```bash
+$ sudo chmod +0666 /dev/uinput
+$ sudo chmod -R +0666 /dev/input
+$ sudo chmod +0666 /dev/console
+```
+
+For permanently giving permissions, you can add the user to groups input and tty (tty group doesn't have permissions to read from /dev/console, you have to give it permission manually), for /dev/uinput, you will have to add new rules.
+```bash
+$ sudo usermod -aG input,tty $USER
 ```
 
 #### Create new script 

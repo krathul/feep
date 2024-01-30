@@ -1,6 +1,7 @@
 import subprocess
 from .base import BaseWindowActionHandler
 from .base import BaseInputActionHandler
+from pynput import mouse, keyboard
 
 """
 Action handler for X window system
@@ -45,3 +46,12 @@ class InputActionHandler(BaseInputActionHandler):
     def GetHandler(cls):
         return cls()
     
+    def __init__(self) -> None:
+        super().__init__()  
+        self.mouse = mouse.Controller()
+        self.mouse_listener = mouse.Listener
+        self.mouse_buttons = mouse.Button
+   
+        self.keyboard = keyboard.Controller()
+        self.keyboard_listener = keyboard.Listener
+        self.keyboard_keys = keyboard.Key

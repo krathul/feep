@@ -38,9 +38,9 @@ class Click(Action):
     def execute(self, ctx):
         test_window = ctx.test_window
         w_id, w_x, w_y = test_window.id, test_window.location.x, test_window.location.y
-        subprocess.run(["kdotool", "windowactivate", w_id], capture_output = True)
-        # Action.mouse.position = (w_x + int(self.x), w_y + int(self.y))
-        # Action.mouse.click(Button.left, 1)
+        self.window_handler.WindowFocus(w_id)
+        self.input_handler.mouse.position = (w_x + int(self.x), w_y + int(self.y))
+        self.input_handler.mouse.click(Button.left, 1)
 
 
 class ScrollUp(Action):
@@ -48,8 +48,7 @@ class ScrollUp(Action):
         return
 
     def execute(self, _):
-        pass
-        #Action.mouse.scroll(0,-4)
+        self.input_handler.mouse.scroll(0,-4)
 
 
 class ScrollDown(Action):
@@ -57,8 +56,7 @@ class ScrollDown(Action):
         return
 
     def execute(self, _):
-        pass
-        # Action.mouse.scroll(0,4)
+        self.input_handler.mouse.scroll(0,4)
 
 
 class Sleep(Action):
@@ -92,10 +90,9 @@ class Write(Action):
     def execute(self, ctx):
         test_window = ctx.test_window
         w_id, w_x, w_y = test_window.id, test_window.location.x, test_window.location.y
-        # Action.mouse.position = (w_x + int(self.str_x), w_y + int(self.str_y))
-        # w_id = self.xdo.get_window_at_mouse()
-        # self.xdo.focus_window(w_id)
-        # os.system(f'xdotool type --window {w_id} --delay [500] "{self.str_to_write}"')
+        self.window_handler.WindowFocus(w_id)
+        self.input_handler.mouse.position = (w_x + int(self.str_x), w_y + int(self.str_y))
+        self.input_handler.keyboard.write(self.str_to_write)
 
 
 class ReOriginWindow(Action):
@@ -115,10 +112,10 @@ class ReOriginWindow(Action):
         w_id = test_window.id
         w_x, w_y = self.origin_win_x, self.origin_win_y
 
-        Action.WindowHandler.WindowMove(w_id, w_x, w_y)
+        self.window_handler.WindowMove(w_id, w_x, w_y)
         time.sleep(2)
 
-        new_win_location = Action.WindowHandler.GetwindowLocation(w_id)
+        new_win_location = self.window_handler.GetwindowLocation(w_id)
         ctx.test_window.location = new_win_location
 
         if (new_win_location.x, new_win_location.y) != (w_x, w_y):
@@ -153,10 +150,10 @@ class ResizeWindow(Action):
             self.orig_win_width,
             self.orig_win_height,
         )
-        Action.WindowHandler.ResizeWindow(w_id, w_width, w_height)
+        self.window_handler.ResizeWindow(w_id, w_width, w_height)
         time.sleep(2)
 
-        ctx.test_window.size = Action.WindowHandler.GetWindowGeometry(w_id)
+        ctx.test_window.size = self.window_handler.GetWindowGeometry(w_id)
 
         if (ctx.test_window.size.width, ctx.test_window.size.height) != (w_width, w_height):
             log_str = "<red>Test window is not rezised corretly to ({}x{}), current size is {}x{}</red>".format(
@@ -180,7 +177,7 @@ class KeyboardWrite(Action):
         self.keys_str: str
         self.keys_list: List[str]
 
-    def __charsToKeys(self, keys_buffer: List[str]) -> List[str | Key]:
+    def _charsToKeys(self, keys_buffer: List[str]) -> List[str | Key]:
         pynput_keys: List[str | Key] = []
         INV_KEYS_MAP = {v: k for k, v in OPTIMIZED_KEYS_MAP.items()}
         restoreOriginalName = lambda key: INV_KEYS_MAP[key] if key in INV_KEYS_MAP else key
@@ -190,15 +187,6 @@ class KeyboardWrite(Action):
             pynput_keys.append(key_obj)
         return pynput_keys
 
-    def __playRecordedKeys(self, keys: List[str | Key]):
-        controller = keyboard.Controller()
-        for key in keys:
-            controller.tap(key)
-
-    def _playRecordedKeys(self, keys_list: List[str]):
-        pynput_keys = self.__charsToKeys(keys_list)
-        self.__playRecordedKeys(pynput_keys)
-
     def parse(self, start_line: Line):
         line_str = start_line.line_str
         str_match = re.search("writeRecordedKeys (.*)", line_str)
@@ -207,7 +195,9 @@ class KeyboardWrite(Action):
             self.keys_list = json.loads(self.keys_str)
 
     def execute(self, _):
-        self._playRecordedKeys(self.keys_list)
+        pynput_keys = self.__charsToKeys(self.keys_list)
+        for key in pynput_keys:
+            self.input_handler.keyboard.tap(key)
 
 
 class WriteMessageToLog(Action):
@@ -287,29 +277,29 @@ class Comment(Action):
             ctx.pushToDesciptionStack(self.comment)
 
 
-class DragMouse(Action):
-    def __init__(self) -> None:
-        self.start_pos: tuple[int, int]
-        self.end_pos: tuple[int, int]
+# class DragMouse(Action):
+#     def __init__(self) -> None:
+#         self.start_pos: tuple[int, int]
+#         self.end_pos: tuple[int, int]
 
-    def parse(self, start_line: Line):
-        line_str = start_line.line_str
-        str_match = re.search(r"dragMouse (\d*),(\d*) to (\d*),(\d*)", line_str)
-        if str_match:
-            self.start_pos = (int(str_match.group(1)), int(str_match.group(2)))
-            self.end_pos = (int(str_match.group(3)), int(str_match.group(4)))
+#     def parse(self, start_line: Line):
+#         line_str = start_line.line_str
+#         str_match = re.search(r"dragMouse (\d*),(\d*) to (\d*),(\d*)", line_str)
+#         if str_match:
+#             self.start_pos = (int(str_match.group(1)), int(str_match.group(2)))
+#             self.end_pos = (int(str_match.group(3)), int(str_match.group(4)))
 
-    def execute(self, ctx):
-        logger.info("Drag mouse from {} to {}".format(self.start_pos, self.end_pos))
+#     def execute(self, ctx):
+#         logger.info("Drag mouse from {} to {}".format(self.start_pos, self.end_pos))
 
-        DURATION, STEPS = 5, 500
-        WAIT_TIME = DURATION / STEPS
+#         DURATION, STEPS = 5, 500
+#         WAIT_TIME = DURATION / STEPS
 
-        x1, y1 = self.start_pos
-        x2, y2 = self.end_pos
+#         x1, y1 = self.start_pos
+#         x2, y2 = self.end_pos
 
-        test_window = ctx.test_window
-        w_x, w_y = test_window.location.x, test_window.location.y
+#         test_window = ctx.test_window
+#         w_x, w_y = test_window.location.x, test_window.location.y
         # w_id = self.xdo.get_window_at_mouse()
 
         # # Move mouse to start position

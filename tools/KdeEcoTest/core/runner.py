@@ -4,11 +4,9 @@ from datetime import datetime as dt
 from pathlib import Path
 
 from loguru import logger
-from pynput import keyboard
-from pynput.keyboard import Key
 
-from core.actions import Action, Comment
-from core.Handlers import WindowHandler, InputHandler
+from ._actions import Action, Comment
+from .Handlers import WindowHandler, InputHandler
 
 from .helpers import TestScript, Window
 from .parser import Parser
@@ -70,7 +68,9 @@ class Runner:
         self.test_script = test_script
         self.is_running: bool = True
         self.context: Context = Context(test_script, log_file)
-        self.key_listener = keyboard.Listener(on_press=self._onPress)
+        self.window_handler = WindowHandler.GetHandler()
+        self.input_handler = InputHandler.GetHandler()
+        self.key_listener = self.input_handler.keyboard_listener(on_press=self._onPress)
 
     def run(self):
         self.key_listener.start()
@@ -84,7 +84,7 @@ class Runner:
 
         self.context.writeToLogFormatted("", status="startTestrun")
 
-        self.xdo.focus_window(self.context.test_window.id)
+        self.window_handler.WindowFocus(self.context.test_window.id)
         for action in actions:
             if self.is_running:
                 self.context.executeAction(action)
@@ -92,9 +92,9 @@ class Runner:
         self.context.writeToLogFormatted("", status="stopTestrun")
 
     def _defineWindow(self) -> Window:
-        win_id = WindowHandler.SelectWindow()
-        win_location = WindowHandler.GetwindowLocation()
-        win_size = WindowHandler.GetWindowGeometry()
+        win_id = self.window_handler.SelectWindow()
+        win_location = self.window_handler.GetwindowLocation()
+        win_size = self.window_handler.GetWindowGeometry()
         self.window_defined = True
 
         log_str = "<green>Window defined with id: {}, at ({}, {}), with size {}x{}</green>"
@@ -115,7 +115,7 @@ class Runner:
                 print(f"The testing program is on {state} mode.")
 
             """
-            if key == Key.esc:
+            if key == self.input_handler.keyboard_keys.esc:
                 logger.opt(colors=True).info("<red>Program aborted.</red>")
                 os.kill(os.getpid(), signal.SIGTERM)
         except AttributeError:

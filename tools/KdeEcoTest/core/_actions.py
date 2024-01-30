@@ -1,12 +1,5 @@
 from enum import Enum
 from abc import ABC, abstractmethod
-from .Handlers.base import BaseInputActionHandler, BaseWindowActionHandler
-
-from .Handlers import (
-    WindowHandler,
-    InputHandler
-)
-
 
 class ActionType(str, Enum):
     CLICK = "click"
@@ -26,8 +19,13 @@ class ActionType(str, Enum):
 
 
 class Action(ABC):
-    WindowHandler : BaseWindowActionHandler = WindowHandler.GetHandler()
-    InputHandler : BaseInputActionHandler = InputHandler.GetHandler()
+    window_handler = None
+    input_handler = None
+
+    @staticmethod
+    def set_handlers(_window_handler, _input_handler):
+        Action.window_handler = _window_handler
+        Action.input_handler = _input_handler
 
     @abstractmethod
     def parse():

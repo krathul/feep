@@ -3,10 +3,20 @@ from .base import BaseWindowActionHandler
 from .base import BaseInputActionHandler
 import dbus
 import json
+from pynput import mouse, keyboard
+
+
+def get_cursor_position():
+    """function to query the kwin compositor for cursor position
+    """
+    out = subprocess.run(["kdotool","getmouselocation"], capture_output = True).stdout.decode().strip('\n')
+    out = json.loads(out)
+    return (out[0],out[1])
+
 
 """
 Action handler for X window system
-"""  
+""" 
 class WindowActionHandler(BaseWindowActionHandler):
     @classmethod
     def GetHandler(cls):
@@ -54,4 +64,16 @@ class WindowActionHandler(BaseWindowActionHandler):
 class InputActionHandler(BaseInputActionHandler):
     @classmethod
     def GetHandler(cls):
-        return cls()
+        return cls(_position_getter_ = get_cursor_position)
+    
+    def __init__(self, _position_getter_) -> None:
+        super().__init__()  
+        self.mouse = mouse.Controller(_position_getter = _position_getter_)
+        self.mouse_listener = mouse.Listener
+        self.mouse_buttons = mouse.Button
+   
+        self.keyboard = keyboard.Controller()
+        self.keyboard_listener = keyboard.Listener
+        self.keyboard_keys = keyboard.Key
+
+        
