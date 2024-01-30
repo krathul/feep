@@ -1,12 +1,11 @@
 from datetime import datetime as dt
 from pathlib import Path
 from typing import Optional
-
 import typer
 
+from core.runner import Runner
 from core.creator import createTestScript
 from core.helpers import TestScript
-from core.runner import Runner
 
 
 def getDefaultLogFile():

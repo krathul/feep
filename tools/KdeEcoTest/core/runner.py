@@ -5,8 +5,9 @@ from pathlib import Path
 
 from loguru import logger
 
-from ._actions import Action, Comment
 from .Handlers import WindowHandler, InputHandler
+from ._actions import Action
+from .actions import Comment
 
 from .helpers import TestScript, Window
 from .parser import Parser
@@ -71,6 +72,7 @@ class Runner:
         self.window_handler = WindowHandler.GetHandler()
         self.input_handler = InputHandler.GetHandler()
         self.key_listener = self.input_handler.keyboard_listener(on_press=self._onPress)
+        Action.set_handlers(self.window_handler,self.input_handler)
 
     def run(self):
         self.key_listener.start()
@@ -93,8 +95,8 @@ class Runner:
 
     def _defineWindow(self) -> Window:
         win_id = self.window_handler.SelectWindow()
-        win_location = self.window_handler.GetwindowLocation()
-        win_size = self.window_handler.GetWindowGeometry()
+        win_location = self.window_handler.GetwindowLocation(win_id)
+        win_size = self.window_handler.GetWindowGeometry(win_id)
         self.window_defined = True
 
         log_str = "<green>Window defined with id: {}, at ({}, {}), with size {}x{}</green>"
