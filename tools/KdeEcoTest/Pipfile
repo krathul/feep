@@ -5,11 +5,11 @@ name = "pypi"
 
 [packages]
 pynput = {git = "git+https://invent.kde.org/krathul/pynput.git"}
-dbus-python = "*"
+dbus-python = "*"; sys_platform == "linux"
 loguru = "*"
 typer = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version >= "3.10"

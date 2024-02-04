@@ -30,7 +30,6 @@ class WindowActionHandler(BaseWindowActionHandler):
 
     @staticmethod
     def ResizeWindow(win_id,n_height:int,n_width:int):
-        print(win_id,n_height,n_width)
         subprocess.run(["kdotool", "windowsize", win_id, str(n_height), str(n_width)],capture_output=True)
 
     @staticmethod

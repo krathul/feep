@@ -266,46 +266,45 @@ class Comment(Action):
         if self.comment != "":
             ctx.pushToDesciptionStack(self.comment)
 
+##Should be modified later on
+class DragMouse(Action):
+    def __init__(self) -> None:
+        self.start_pos: tuple[int, int]
+        self.end_pos: tuple[int, int]
 
-# class DragMouse(Action):
-#     def __init__(self) -> None:
-#         self.start_pos: tuple[int, int]
-#         self.end_pos: tuple[int, int]
+    def parse(self, start_line: Line):
+        line_str = start_line.line_str
+        str_match = re.search(r"dragMouse (\d*),(\d*) to (\d*),(\d*)", line_str)
+        if str_match:
+            self.start_pos = (int(str_match.group(1)), int(str_match.group(2)))
+            self.end_pos = (int(str_match.group(3)), int(str_match.group(4)))
 
-#     def parse(self, start_line: Line):
-#         line_str = start_line.line_str
-#         str_match = re.search(r"dragMouse (\d*),(\d*) to (\d*),(\d*)", line_str)
-#         if str_match:
-#             self.start_pos = (int(str_match.group(1)), int(str_match.group(2)))
-#             self.end_pos = (int(str_match.group(3)), int(str_match.group(4)))
+    def execute(self, ctx):
+        logger.info("Drag mouse from {} to {}".format(self.start_pos, self.end_pos))
 
-#     def execute(self, ctx):
-#         logger.info("Drag mouse from {} to {}".format(self.start_pos, self.end_pos))
+        DURATION, STEPS = 5, 500
+        WAIT_TIME = DURATION / STEPS
 
-#         DURATION, STEPS = 5, 500
-#         WAIT_TIME = DURATION / STEPS
+        x1, y1 = self.start_pos
+        x2, y2 = self.end_pos
 
-#         x1, y1 = self.start_pos
-#         x2, y2 = self.end_pos
+        test_window = ctx.test_window
+        w_x, w_y = test_window.location.x, test_window.location.y
+        w_id = test_window.id
 
-#         test_window = ctx.test_window
-#         w_x, w_y = test_window.location.x, test_window.location.y
-        # w_id = self.xdo.get_window_at_mouse()
+        self.window_handler.WindowFocus(w_id)
+        # Move mouse to start position
+        self.input_handler.mouse.position = (w_x + int(x1), w_y + int(y1))
+        self.input_handler.mouse.press(self.input_handler.mouse_buttons.left)
 
-        # # Move mouse to start position
-        # self.xdo.move_mouse(w_x + int(x1), w_y + int(y1))
-        # self.xdo.focus_window(w_id)
-        # self.xdo.mouse_down(w_id, 1)
+        # Move mouse to end position while holding down the mouse button
+        for i in range(1, STEPS + 1):
+            x = x1 + int(i * (x2 - x1) / STEPS)
+            y = y1 + int(i * (y2 - y1) / STEPS)
 
-        # # Move mouse to end position while holding down the mouse button
-        # for i in range(1, STEPS + 1):
-        #     x = x1 + int(i * (x2 - x1) / STEPS)
-        #     y = y1 + int(i * (y2 - y1) / STEPS)
+            #logger.info("Move mouse to {}, {}".format(x, y))
 
-        #     logger.info("Move mouse to {}, {}".format(x, y))
+            self.input_handler.mouse.move(int(x), int(y))
+            time.sleep(WAIT_TIME)
 
-        #     self.xdo.move_mouse(w_x + int(x), w_y + int(y))
-        #     self.xdo.focus_window(w_id)
-        #     time.sleep(WAIT_TIME)
-
-        # self.xdo.mouse_up(w_id, 1)
+        self.input_handler.mouse.relase(self.input_handler.mouse_buttons.left)

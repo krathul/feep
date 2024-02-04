@@ -5,7 +5,7 @@ from ._actions import Action, ActionType
 from .actions import (
     Click,
     Comment,
-    #DragMouse,
+    DragMouse,
     ExecuteFunction,
     ReOriginWindow,
     RepeatFunction,
@@ -149,7 +149,7 @@ class Parser:
             ActionType.REPEAT_FUNCTION: RepeatFunction,
             ActionType.LOG_MESSAGE: WriteMessageToLog,
             ActionType.COMMENT: Comment,
-           # ActionType.DRAG_MOUSE: DragMouse,
+            ActionType.DRAG_MOUSE: DragMouse,
         }
         parsed_action = parsing_map[action_type]()
         parsed_action.parse(line)
