@@ -1,7 +1,6 @@
 import subprocess
 import dbus
 import json
-import math
 from pynput import mouse, keyboard
 from collections import namedtuple
 

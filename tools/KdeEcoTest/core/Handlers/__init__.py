@@ -25,8 +25,36 @@ def set_handlers(package):
          raise ImportError('Platform not supported')
 
 backend = set_handlers(__name__)
+
 WindowHandler = backend.WindowActionHandler
+"""
+WindowHandler( or WindowActionHandler) provides static methods for interacting with the display server\n
+Methods:\n
+GetHandler(cls) => returns an instance of WindowActionHandler\n
+SelectWindow() => return id of the selected window\n
+WindowMove(win_id, win_posx:int, win_posy:int) => moves the window\n 
+GetwindowLocation(win_id) => get location of window\n
+ResizeWindow(win_id, n_height:int, n_width:int) => resize window\n
+GetActiveWindow() => get the currently active window\n
+GetWindowGeometry(win_id) => get dimensions of window\n
+WindowFocus(win_id) => focus on the window specified by window id
+"""
+
 InputHandler = backend.InputActionHandler
+"""
+InputHandler( or InputActionHandler) and its attributes are currently just an alias to pynput classes.\n
+Attributes:\n
+mouse => pynput.mouse.Controller instance,\n
+mouse_listerner => pynput.mouse.Listener class,\n
+mouse_buttons => pynput.mouse.Button class,\n
+\n
+keyboard => pynput.keyboard.Controller instance,\n
+keyboard_listener => pynput.keyboard.Listener class,\n
+keyboard_keys => pynput.keyboard.Key\n
+\n
+Methods:\n
+GetHandler(cls) => Returns an instance InputActionHandler
+"""
 del backend
 
 __all__ = [
