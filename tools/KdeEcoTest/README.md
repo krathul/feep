@@ -12,7 +12,7 @@ A Standard Usage Scenario reflects the typical functions of an application and i
 
 `KdeEcoTest` helps to create a script which simulates the activities of a normal user in order to create a Standard Usage Scenario. `KdeEcoTest` also runs those scripts to automate emulation of user behavior in order to measure energy consumption of an application while in use.
 
-`KdeEcoTest` is a cross-platform CLI based Python tool.
+`KdeEcoTest` is a cross-platform CLI based Python tool. KdeEcoTest on Linux only supports running KDE plasma as it uses APIs provided by the KWin compositor.
 
 ### Testing and Usage
 
@@ -23,24 +23,20 @@ $ git clone -b dev https://invent.kde.org/krathul/feep.git
 $ cd feep/tools/KdeEcoTest/
 $ pip install pipenv
 
-#Do these steps only if you are on KDE plasma
+#Do these steps for running on Linux
 $ mkdir -p externals/kdotool
 $ git clone -b dev https://invent.kde.org/krathul/kdotool.git externals/kdotool
 $ make
 
+#Common for all
 #Create environment and install dependencies
 $ pipenv install
 #Activate the environment
 $ pipenv shell
-
-#For running on X11 based systems, you need to additionally install python-libxdo and xdotools
-$ pipenv install python-libxdo
-#For installing xdotool check your package manager for info
-
 ```
 
-KdeEcotest uses libevdev for reading and simulating events from input devices, and requires permission to read and write from /dev/input, /dev/uinput, /dev/console
-This can be done by other modifying the permissions to the file or adding the user to the required groups
+KdeEcotest uses libevdev for reading and simulating events from input devices, and requires permission to read and write from /dev/input, /dev/uinput, additionally it also requires permission to write from /dev/console for getting keyboard layout using dumpkeys utility.
+These permission can be given either by modifying the permissions to the file or adding the user to the required groups.
 
 To grant permissions temporarily (Per login session)
 ```bash
@@ -49,9 +45,17 @@ $ sudo chmod -R +0666 /dev/input
 $ sudo chmod +0666 /dev/console
 ```
 
-For permanently giving permissions, you can add the user to groups input and tty (tty group doesn't have permissions to read from /dev/console, you have to give it permission manually), for /dev/uinput, you will have to add new rules.
+For permanently giving permissions, you can add the user to groups input and tty (input group has permission to read and write from /dev/input and tty group has permission to write from /dev/cosole), for /dev/uinput, you will have to add new rules.
 ```bash
 $ sudo usermod -aG input,tty $USER
+
+# For adding to rules for uinput
+# Create a group
+$ sudo groupadd -r uinput
+# Add yourself to the group
+$ sudo usermod -aG uinput $USER
+# Give the group permissions to use the uinput kernel module
+$ echo 'KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/60-uinput.rules
 ```
 
 #### Create new script 
