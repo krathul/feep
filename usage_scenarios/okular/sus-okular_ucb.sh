@@ -3,9 +3,9 @@
 ######################################
 # THESE NEED TO BE DEFINED IN OKULAR #
 ######################################
-# Rotate Left: Alt+l
-# Rotate Right: Alt+r
-# Invert color: Alt+i
+# Rotate Left: Ctrl+l
+# Rotate Right: Ctrl+r
+# Invert color: Ctrl+i
 # Fit to width: Ctrl+Shift+w
 
 # Make sure language is set to en_us
