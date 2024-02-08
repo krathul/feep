@@ -5,7 +5,7 @@ import importlib
 
 def set_handlers(package):
     module = None
-    if _platform.system() == 'win32':
+    if _platform.system() == 'Windows':
             module = '.win32'
             os.environ['PYNPUT_BACKEND']='win32'
     elif _platform.system() == 'Linux':
@@ -16,8 +16,8 @@ def set_handlers(package):
             KDOTOOL_PATH = os.path.join(Path(os.path.dirname(__file__)).parent,'bin/kdotool/release')
             os.environ['PATH'] = KDOTOOL_PATH + ':' + os.environ['PATH']
         elif os.environ.get('XDG_SESSION_TYPE',None) == 'X11':
-            module = '.x11'
-            os.environ['PYNPUT_BACKEND']='xorg'
+            print('Platform Not Supported')
+            exit()
 
     try:
         return importlib.import_module(module,package)
